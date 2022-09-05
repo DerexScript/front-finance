@@ -2,32 +2,37 @@ import React from 'react';
 import {
   Routes as Switch,
   Route,
-  Outlet,
-  Navigate,
   unstable_HistoryRouter as Router,
 } from 'react-router-dom';
 import routes from './routes';
+
 import Login from 'pages/Login';
-import useAuth from 'routes/auth';
+
 import history from 'routes/history';
+import { AuthProvider } from 'context/AuthProvider';
+import { ProtectedLayout } from 'components/ProtectedLayout';
 
 function Routes(): JSX.Element {
   return (
-    <Router history={history}>
-      <Switch>
-        <Route
-          path='/'
-          element={useAuth() ? <Outlet /> : <Navigate to='/login' />}
-        >
+    <AuthProvider>
+      <Router history={history}>
+        <Switch>
+          <Route path='*' element={<div>Page Not Found 404.</div>} />
+          <Route path='/login' element={<Login />} />
           {routes.map((route, key) => (
-            <Route key={key} path={route.path} element={<route.component />} />
+            <Route
+              key={key}
+              path={route.path}
+              element={
+                <ProtectedLayout protected={route?.protected as boolean}>
+                  <route.component />
+                </ProtectedLayout>
+              }
+            />
           ))}
-          <Route path='/*' element={<Navigate to='/dashboard/Home' />} />
-        </Route>
-        <Route path='/login' element={<Login />} />
-        <Route path='*' element={<Navigate to='/login' />} />
-      </Switch>
-    </Router>
+        </Switch>
+      </Router>
+    </AuthProvider>
   );
 }
 

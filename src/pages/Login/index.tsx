@@ -13,9 +13,10 @@ import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import { MdLockOutline as LockOutlinedIcon } from 'react-icons/md';
 import Typography from '@mui/material/Typography';
-import useAuth from 'routes/auth';
+import { useAuth } from 'context/AuthProvider/useAuth';
 import { useNavigate } from 'react-router-dom';
 import ComponetLoading from 'components/molecules/ComponentLoading';
+import { Snackbar } from '@mui/material';
 
 function Copyright(props: any): JSX.Element {
   return (
@@ -39,15 +40,25 @@ const theme = createTheme();
 
 function Login(): JSX.Element {
   const navigate = useNavigate();
+  const auth = useAuth();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    const auth: { [key: string]: String } = {
-      user: data.get('user') as String,
-      password: data.get('password') as String,
-      remember: data.get('remember') as String,
+    const fields: { [key: string]: string } = {
+      credential: data.get('credential') as string,
+      password: data.get('password') as string,
+      remember: data.get('remember') as string,
     };
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
+      auth.authenticate(fields.credential, fields.password);
+      navigate('/dashboard/Home');
+    } catch (error) {
+      console.log('error');
+    }
+
+    /*
     if (
       auth.user.length > 0 &&
       auth.password.length > 0 &&
@@ -72,6 +83,7 @@ function Login(): JSX.Element {
       console.clear();
       console.log('marque o lembrar');
     }
+    */
   };
 
   return (
@@ -122,7 +134,7 @@ function Login(): JSX.Element {
                 fullWidth
                 id='user'
                 label='Usuario'
-                name='user'
+                name='credential'
                 autoComplete='usuario'
                 autoFocus
               />
