@@ -2,22 +2,20 @@ import React from 'react';
 import {
   Routes as Switch,
   Route,
-  unstable_HistoryRouter as Router,
+  BrowserRouter as Router,
+  Navigate,
 } from 'react-router-dom';
 import routes from './routes';
-
 import Login from 'pages/Login';
-
-import history from 'routes/history';
 import { AuthProvider } from 'context/AuthProvider';
 import { ProtectedLayout } from 'components/ProtectedLayout';
 
 function Routes(): JSX.Element {
   return (
     <AuthProvider>
-      <Router history={history}>
+      <Router>
         <Switch>
-          <Route path='*' element={<div>Page Not Found 404.</div>} />
+          <Route path='*' element={<Navigate to='/Login' />} />
           <Route path='/login' element={<Login />} />
           {routes.map((route, key) => (
             <Route

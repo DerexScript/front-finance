@@ -7,22 +7,28 @@ export const AuthContext = createContext<IContext>({} as IContext);
 
 export const AuthProvider = ({ children }: IAuthProvider): JSX.Element => {
   const [user, setUser] = useState<IUser | null>();
+  const [loading, setLoading] = useState<Boolean>(true);
 
   useEffect(() => {
     const user = getUserLocalStorage();
     if (user) {
       setUser(user);
     }
+    setLoading(false);
   }, []);
 
   const authenticate = async (
     credential: string,
     password: string
-  ): Promise<void> => {
+  ): Promise<Boolean> => {
     const res = await LoginRequest(credential, password);
-    const payload = { token: res.token, credential };
-    setUser(payload);
-    setUserLocalStorage(payload);
+    if (res) {
+      const payload = { token: res.token, credential };
+      setUser(payload);
+      setUserLocalStorage(payload);
+      return true;
+    }
+    return false;
   };
 
   const logout = (): void => {
@@ -31,8 +37,12 @@ export const AuthProvider = ({ children }: IAuthProvider): JSX.Element => {
   };
 
   return (
-    <AuthContext.Provider value={{ ...user, authenticate, logout }}>
-      {children}
-    </AuthContext.Provider>
+    <>
+      {!loading ? (
+      <AuthContext.Provider value={{ ...user, authenticate, logout }}>
+        {children} 
+      </AuthContext.Provider>
+      ): (<h1>Loading...</h1>)}
+    </>
   );
 };

@@ -21,8 +21,7 @@ export async function LoginRequest(
   password: string
 ): Promise<any> {
   try {
-    console.log('initializing request: ' + credential + ' - ' + password);
-    const req = await Api.post('login/', { credential, password });
+    const req = await Api.post('login', { credential, password });
     return req.data.data;
   } catch (error) {
     return null;

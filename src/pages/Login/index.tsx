@@ -16,7 +16,8 @@ import Typography from '@mui/material/Typography';
 import { useAuth } from 'context/AuthProvider/useAuth';
 import { useNavigate } from 'react-router-dom';
 import ComponetLoading from 'components/molecules/ComponentLoading';
-import { Snackbar } from '@mui/material';
+import { IconButton, Snackbar } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 
 function Copyright(props: any): JSX.Element {
   return (
@@ -41,8 +42,38 @@ const theme = createTheme();
 function Login(): JSX.Element {
   const navigate = useNavigate();
   const auth = useAuth();
+  const [open, setOpen] = React.useState(false);
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
+  const handleClose = (
+    event: React.SyntheticEvent | Event,
+    reason?: string
+  ): void => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  const action = (
+    <React.Fragment>
+      <Button color='secondary' size='small' onClick={handleClose}>
+        UNDO
+      </Button>
+      <IconButton
+        size='small'
+        aria-label='close'
+        color='inherit'
+        onClick={handleClose}
+      >
+        <CloseIcon fontSize='small' />
+      </IconButton>
+    </React.Fragment>
+  );
+
+  const handleSubmit = async (
+    event: React.FormEvent<HTMLFormElement>
+  ): Promise<void> => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const fields: { [key: string]: string } = {
@@ -52,8 +83,15 @@ function Login(): JSX.Element {
     };
     try {
       // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      auth.authenticate(fields.credential, fields.password);
-      navigate('/dashboard/Home');
+      const isAuth = await auth.authenticate(
+        fields.credential,
+        fields.password
+      );
+      if (isAuth) {
+        navigate('/dashboard/Home');
+      } else {
+        setOpen(true);
+      }
     } catch (error) {
       console.log('error');
     }
@@ -88,6 +126,13 @@ function Login(): JSX.Element {
 
   return (
     <ThemeProvider theme={theme}>
+      <Snackbar
+        open={open}
+        autoHideDuration={4000}
+        onClose={handleClose}
+        message='Usuario ou senha invalidos'
+        action={action}
+      />
       <Grid container component='main' sx={{ height: '100vh' }}>
         <CssBaseline />
         <Grid
@@ -125,6 +170,7 @@ function Login(): JSX.Element {
             <Box
               component='form'
               noValidate
+              // eslint-disable-next-line @typescript-eslint/no-misused-promises
               onSubmit={handleSubmit}
               sx={{ mt: 1 }}
             >
