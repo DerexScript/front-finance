@@ -1,5 +1,5 @@
 import { IUser } from './type';
-import { Api } from './../../components/services/api';
+import { Api } from '../../services/api';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const setUserLocalStorage = (user: IUser | null) => {
