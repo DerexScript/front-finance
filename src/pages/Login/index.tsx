@@ -88,7 +88,7 @@ function Login(): JSX.Element {
         fields.password
       );
       if (isAuth) {
-        navigate('/dashboard/Home');
+        navigate('/Home');
       } else {
         setOpen(true);
       }

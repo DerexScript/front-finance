@@ -3,11 +3,11 @@ import IRoutes from './IRoutes';
 
 const routesCompanies: IRoutes[] = [
   {
-    path: '/dashboard/Companies',
+    path: '/dashboard/Company',
     protected: true,
     component: Companies,
     visibleInDisplay: true,
-    displayName: 'Companies',
+    displayName: 'Empresas',
   },
 ];
 
