@@ -1,4 +1,5 @@
-import SimpleBackdrop from 'components/atoms/loading2';
+import Loading from 'components/atoms/loading2';
+import { Api } from 'components/services/api';
 import React, { createContext, useEffect, useState } from 'react';
 import { IAuthProvider, IContext, IUser } from './type';
 import { getUserLocalStorage, LoginRequest, setUserLocalStorage } from './util';
@@ -23,6 +24,7 @@ export const AuthProvider = ({ children }: IAuthProvider): JSX.Element => {
       const payload = { token: res.token, credential };
       setUser(payload);
       setUserLocalStorage(payload);
+      Api.defaults.headers.common['Authorization'] = `Bearer ${res.token}`;
       return true;
     }
     return false;
@@ -31,6 +33,7 @@ export const AuthProvider = ({ children }: IAuthProvider): JSX.Element => {
   const logout = (): void => {
     setUser(null);
     setUserLocalStorage(null);
+    Api.defaults.headers.common['Authorization'] = '';
   };
 
   return (
@@ -40,7 +43,7 @@ export const AuthProvider = ({ children }: IAuthProvider): JSX.Element => {
           {children}
         </AuthContext.Provider>
       ) : (
-        <SimpleBackdrop state={loading} />
+        <Loading state={loading} />
       )}
     </>
   );

@@ -9,6 +9,7 @@ import routes from './routes';
 import Login from 'pages/Login';
 import { AuthProvider } from 'context/AuthProvider';
 import { ProtectedLayout } from 'components/ProtectedLayout';
+import Logout from 'pages/Logout';
 
 function Routes(): JSX.Element {
   return (
@@ -17,6 +18,7 @@ function Routes(): JSX.Element {
         <Switch>
           <Route path='*' element={<Navigate to='/Login' />} />
           <Route path='/login' element={<Login />} />
+          <Route path='/logout' element={<Logout />} />
           {routes.map((route, key) => (
             <Route
               key={key}

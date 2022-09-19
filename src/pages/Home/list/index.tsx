@@ -1,9 +1,5 @@
 import React, { useState } from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
+import { AppBar, Link, Box, Toolbar, IconButton, Typography } from '@mui/material';
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
@@ -13,8 +9,10 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 
-const pages = ['Products', 'Pricing'];
-const settings = ['Perfil', 'Conta', 'Dashboard', 'Sair'];
+const pages = ['Home'];
+const pagesRoutes = ['/'];
+const settings = ['Dashboard', 'Sair'];
+const settingsRoutes = ['/dashboard/', '/logout'];
 
 const ResponsiveAppBar = (): JSX.Element => {
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
@@ -90,10 +88,12 @@ const ResponsiveAppBar = (): JSX.Element => {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign='center'>{page}</Typography>
-                </MenuItem>
+              {pages.length && pages.map((page, key) => (
+                <Link key={key} href={pagesRoutes[key]} underline='none' >
+                  <MenuItem onClick={handleCloseNavMenu}>
+                    <Typography textAlign='center'>{page}</Typography>
+                  </MenuItem>
+                </Link>
               ))}
             </Menu>
           </Box>
@@ -117,7 +117,7 @@ const ResponsiveAppBar = (): JSX.Element => {
             LOGO
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
+            {pages.length && pages.map((page) => (
               <Button
                 key={page}
                 onClick={handleCloseNavMenu}
@@ -150,10 +150,12 @@ const ResponsiveAppBar = (): JSX.Element => {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign='center'>{setting}</Typography>
-                </MenuItem>
+              {settings.map((setting, key) => (
+                <Link key={key} href={settingsRoutes[key]} underline='none' variant='inherit'>
+                  <MenuItem onClick={handleCloseUserMenu}>
+                    <Typography textAlign='center'>{setting}</Typography>
+                  </MenuItem>
+                </Link>
               ))}
             </Menu>
           </Box>
