@@ -34,8 +34,6 @@ const Role = (): JSX.Element => {
       );
       setColumns(column);
       setRows(rows1);
-      console.log(column);
-      console.log(rows1);
     })();
   }, []);
 
