@@ -1,9 +1,19 @@
-import axios from 'axios';
+import { getUserLocalStorage } from './../context/AuthProvider/util';
+import axios, { AxiosRequestConfig } from 'axios';
 
 export const Api = axios.create({
   baseURL: 'https://api.finanies.tk/api/v1/',
   withCredentials: false,
 });
+
+Api.interceptors.request.use(
+  (config: AxiosRequestConfig) => {
+    config.headers = config.headers ?? {};
+    config.headers.Authorization = `Bearer ${getUserLocalStorage()?.token}`;
+    return config;
+  },
+  error => Promise.reject(error),
+);
 /*
 export const Api = async () => {
   const myHeaders = new Headers();

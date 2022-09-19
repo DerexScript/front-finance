@@ -61,12 +61,6 @@
                 ]
             }
         ],
-        "function-paren-newline": [
-            "error",
-            {
-                "minItems": 5
-            }
-        ],
         "indent": [
             "error",
             2
