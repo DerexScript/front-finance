@@ -1,12 +1,19 @@
-import HomeList from 'pages/dashboard/Home/list';
+import HomeList from 'pages/Home/list';
 import IRoutes from './IRoutes';
 
 const routesHome: IRoutes[] = [
   {
-    path: '/dashboard/Home',
+    path: '/Home',
     component: HomeList,
     protected: true,
-    visibleInDisplay: true,
+    visibleInDisplay: false,
+    displayName: 'Home',
+  },
+  {
+    path: '/',
+    component: HomeList,
+    protected: true,
+    visibleInDisplay: false,
     displayName: 'Home',
   },
 ];
