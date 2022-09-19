@@ -8,12 +8,12 @@ export const Api = axios.create({
 
 Api.interceptors.request.use(
   (config: AxiosRequestConfig) => {
-    config.headers = config.headers ?? {};
-    config.headers.Authorization = `Bearer ${getUserLocalStorage()?.token}`;
+    config.headers !== undefined && (config.headers.Authorization = `Bearer ${getUserLocalStorage()?.token}`);
     return config;
   },
   error => Promise.reject(error),
 );
+
 /*
 export const Api = async () => {
   const myHeaders = new Headers();
