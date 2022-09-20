@@ -1,4 +1,4 @@
-import RoleList from 'pages/Dashboard/Role/list';
+import RoleList from 'pages/dashboard/Role/list';
 import IRoutes from '../IRoutes';
 
 const routesDashboardRole: IRoutes[] = [

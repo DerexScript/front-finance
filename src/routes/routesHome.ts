@@ -1,4 +1,4 @@
-import Home from 'pages/home/Home';
+import Home from 'pages/home/list';
 import IRoutes from './IRoutes';
 
 const routesDashboardHome: IRoutes[] = [
