@@ -20,6 +20,7 @@ import {
 import LinkTwoToneIcon from '@mui/icons-material/LinkTwoTone';
 import routes from 'routes/routes';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from 'context/AuthProvider/useAuth';
 
 function CustomMenu(): JSX.Element {
   const navigate = useNavigate();
@@ -27,6 +28,7 @@ function CustomMenu(): JSX.Element {
   const [auth, setAuth] = React.useState(true);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [drawer, setDrawer] = React.useState(false);
+  const authUser = useAuth();
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>): void => {
     setAnchorEl(event.currentTarget);
@@ -37,10 +39,8 @@ function CustomMenu(): JSX.Element {
   };
 
   const handleLogout = (): void => {
-    localStorage.clear();
-    setTimeout(() => {
-      navigate('/login');
-    }, 1000);
+    authUser.logout();
+    navigate('/login');
   };
 
   const toggleDrawer =
@@ -58,7 +58,7 @@ function CustomMenu(): JSX.Element {
   return (
     <>
       <div>
-        <Drawer anchor='left' open={drawer} onClose={() => setDrawer(false)}>
+        <Drawer anchor='left' open={drawer} onClose={(): void => setDrawer(false)}>
           <Box
             role='presentation'
             onClick={toggleDrawer(false)}
@@ -70,7 +70,7 @@ function CustomMenu(): JSX.Element {
                 .map((route) => (
                   <ListItem
                     key={route.displayName}
-                    onClick={() => {
+                    onClick={(): void => {
                       navigate(route.path);
                       setDrawer(false);
                     }}
@@ -90,7 +90,7 @@ function CustomMenu(): JSX.Element {
       </div>
 
       <Box sx={{ flexGrow: 1 }}>
-        <AppBar position='static'>
+        <AppBar position='static' sx={{ backgroundColor: '#ff6600' }}>
           <Toolbar>
             <IconButton
               size='large'

@@ -1,0 +1,8 @@
+{
+    "recommendations": [
+        "naumovs.color-highlight",
+        "steoates.autoimport",
+        "wix.vscode-import-cost",
+        "esbenp.prettier-vscode"
+    ]
+}

@@ -19,11 +19,22 @@
         }
     },
     "extends": [
+        "eslint:recommended",
         "plugin:react/recommended",
-        "standard-with-typescript",
-        "plugin:prettier/recommended"
+        "plugin:@typescript-eslint/recommended"
     ],
-    "overrides": [],
+    "overrides": [
+        {
+            "files": [
+                "*.ts",
+                "*.tsx"
+            ],
+            "rules": {
+                "@typescript-eslint/explicit-function-return-type": 1
+            }
+        }
+    ],
+    "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "ecmaVersion": "latest",
         "sourceType": "module",
@@ -33,40 +44,10 @@
     },
     "plugins": [
         "react",
+        "@typescript-eslint",
         "prettier"
     ],
     "rules": {
-        "prettier/prettier": [
-            1,
-            {
-                "trailingComma": "es5",
-                "singleQuote": true,
-                "semi": true,
-                "endOfLine": "auto",
-                "jsxSingleQuote": true
-            }
-        ],
-        "quotes": [
-            "error",
-            "single",
-            {
-                "allowTemplateLiterals": true
-            }
-        ],
-        "jsx-quotes": [
-            2,
-            "prefer-single"
-        ],
-        "@typescript-eslint/no-unused-vars": [
-            "warn",
-            {
-                "argsIgnorePattern": "^_"
-            }
-        ],
-        "no-unused-vars": "off",
-        "@typescript-eslint/strict-boolean-expressions": [
-            "off"
-        ],
         "react/no-unescaped-entities": [
             "error",
             {
@@ -79,6 +60,22 @@
                     }
                 ]
             }
+        ],
+        "indent": [
+            "error",
+            2
+        ],
+        
+        "quotes": [
+            "error",
+            "single",
+            {
+                "allowTemplateLiterals": true
+            }
+        ],
+        "semi": [
+            "error",
+            "always"
         ]
     }
 }

@@ -4,7 +4,7 @@ export interface IUser {
 }
 
 export interface IContext extends IUser {
-  authenticate: (credential: string, password: string) => Promise<Boolean>;
+  authenticate: (credential: string, password: string) => Promise<boolean>;
   logout: () => void;
 }
 

@@ -1,13 +1,13 @@
+import Loading from 'components/atoms/loading2';
 import React, { createContext, useEffect, useState } from 'react';
 import { IAuthProvider, IContext, IUser } from './type';
 import { getUserLocalStorage, LoginRequest, setUserLocalStorage } from './util';
 
-// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
 export const AuthContext = createContext<IContext>({} as IContext);
 
 export const AuthProvider = ({ children }: IAuthProvider): JSX.Element => {
   const [user, setUser] = useState<IUser | null>();
-  const [loading, setLoading] = useState<Boolean>(true);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const user = getUserLocalStorage();
@@ -17,10 +17,7 @@ export const AuthProvider = ({ children }: IAuthProvider): JSX.Element => {
     setLoading(false);
   }, []);
 
-  const authenticate = async (
-    credential: string,
-    password: string
-  ): Promise<Boolean> => {
+  const authenticate = async (credential: string, password: string): Promise<boolean> => {
     const res = await LoginRequest(credential, password);
     if (res) {
       const payload = { token: res.token, credential };
@@ -39,10 +36,10 @@ export const AuthProvider = ({ children }: IAuthProvider): JSX.Element => {
   return (
     <>
       {!loading ? (
-      <AuthContext.Provider value={{ ...user, authenticate, logout }}>
-        {children} 
-      </AuthContext.Provider>
-      ): (<h1>Loading...</h1>)}
+        <AuthContext.Provider value={{ ...user, authenticate, logout }}>{children}</AuthContext.Provider>
+      ) : (
+        <Loading state={loading} />
+      )}
     </>
   );
 };

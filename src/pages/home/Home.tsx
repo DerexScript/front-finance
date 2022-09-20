@@ -1,11 +1,4 @@
-import {
-  Box,
-  Card,
-  CardActionArea,
-  CardMedia,
-  Grid,
-  Typography,
-} from '@mui/material';
+import { Box, Card, CardActionArea, CardMedia, Grid, Typography } from '@mui/material';
 import CustomMenu from 'components/Menu';
 import { AuthContext } from 'context/AuthProvider';
 import React, { useContext, useEffect, useState } from 'react';
@@ -20,7 +13,7 @@ const Home = (): JSX.Element => {
   const [companies, setCompanies] = useState([]);
   const { token } = useContext(AuthContext);
   useEffect(() => {
-    void (async (token) => {
+    void (async token => {
       try {
         const response = await Api.get('company', {
           headers: { Authorization: `Bearer ${token as string}` },
@@ -57,9 +50,7 @@ const Home = (): JSX.Element => {
                       }}
                     >
                       <img src={require('./twitter.png')} height='100' />
-                      <Typography sx={{ fontSize: '1.5rem', pt: '30px' }}>
-                        {company.name}
-                      </Typography>
+                      <Typography sx={{ fontSize: '1.5rem', pt: '30px' }}>{company.name}</Typography>
                     </Box>
                   </CardActionArea>
                 </Card>
