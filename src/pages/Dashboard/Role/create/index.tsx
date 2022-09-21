@@ -5,22 +5,34 @@ import TextField from '@mui/material/TextField';
 import { Typography, Button, Snackbar, IconButton } from '@mui/material';
 import { Api } from 'services/api';
 import CloseIcon from '@mui/icons-material/Close';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 const RoleCreate = (): JSX.Element => {
   const [name, setName] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [role, setRole] = useState<string>('');
   const [open, setOpen] = React.useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = async (evt: FormEvent<HTMLFormElement>): Promise<void> => {
     evt.preventDefault();
-    const response = await Api.post('role', {
-      name: name,
-      description: description,
-      role: role,
-    });
-    if (response.status === 201) {
-      setOpen(true);
+    try {
+      const response = await Api.post('role', {
+        name: name,
+        description: description,
+        role: role,
+      });
+      if (response.status === 201) {
+        setOpen(true);
+        toast.success('Role adicionada com sucesso.', {
+          onClose: () => {
+            navigate(-1);
+          },
+        });
+      }
+    } catch (error) {
+      toast.error('Erro ao criar Role.');
     }
   };
 
