@@ -6,7 +6,7 @@ const routesDashboardHome: IRoutes[] = [
     path: '/Home',
     component: Home,
     protected: true,
-    visibleInDisplay: false,
+    visibleInDisplay: true,
     displayName: 'Home',
   },
   {

@@ -1,6 +1,6 @@
 import routesAbout from './routesAbout';
 import routesCompany from './routesCompany';
-import routesDashboardHome from './routesDashboardHome';
+import routesDashboardHome from './dashboard/routesDashboardHome';
 import routesUser from './routesUser';
 import routesCategory from './routesCategory';
 import routesHome from './routesHome';
