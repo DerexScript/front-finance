@@ -1,5 +1,6 @@
 import RoleList from 'pages/Dashboard/Role/list';
 import RoleCreate from 'pages/Dashboard/Role/create';
+import RoleUpdate from 'pages/Dashboard/Role/update';
 import IRoutes from '../IRoutes';
 
 const routesDashboardRole: IRoutes[] = [
@@ -17,6 +18,7 @@ const routesDashboardRole: IRoutes[] = [
     visibleInDisplay: false,
     displayName: 'RoleCreate',
   },
+  { path: '/dashboard/Role/Update/:idRole', component: RoleUpdate },
 ];
 
 export default routesDashboardRole;
