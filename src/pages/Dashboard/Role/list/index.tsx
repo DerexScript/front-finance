@@ -9,20 +9,12 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from 'context/AuthProvider/useAuth';
 import { AxiosError } from 'axios';
 import { toast } from 'react-toastify';
-
-type TRole = {
-  created_at: string;
-  description: string;
-  id: number;
-  name: string;
-  role: string;
-  updated_at: string;
-};
+import { IRole } from './IRole';
 
 const Role = (): JSX.Element => {
   const [columns, setColumns] = useState<GridColDef[]>();
-  const [rows, setRows] = useState<TRole[]>();
-  const [role, setRole] = useState<TRole[]>();
+  const [rows, setRows] = useState<IRole[]>();
+  const [role, setRole] = useState<IRole[]>();
   const [load, setLoad] = useState<boolean>(true);
   const navigate = useNavigate();
   const auth = useAuth();
@@ -120,25 +112,16 @@ const Role = (): JSX.Element => {
           },
         },
       ];
-      const rows1 = role.map(
-        (row: {
-          id: number;
-          name: string;
-          description: string;
-          role: string;
-          created_at: string;
-          updated_at: string;
-        }) => {
-          return {
-            id: row.id,
-            name: row.name,
-            description: row.description,
-            role: row.role,
-            created_at: row.created_at,
-            updated_at: row.updated_at,
-          };
-        },
-      );
+      const rows1 = role.map((row: IRole) => {
+        return {
+          id: row.id,
+          name: row.name,
+          description: row.description,
+          role: row.role,
+          created_at: row.created_at,
+          updated_at: row.updated_at,
+        };
+      });
       setColumns(column);
       setRows(rows1);
     }
@@ -162,7 +145,7 @@ const Role = (): JSX.Element => {
           <div style={{ height: 400, width: '100%' }}>
             {columns?.length && rows?.length ? (
               <DataGrid rows={rows} columns={columns} pageSize={5} rowsPerPageOptions={[5]} checkboxSelection />
-            ) : !load && rows?.length == 0 ? (
+            ) : !load && rows?.length === 0 ? (
               <>Não há funções cadastradas no momento, adicione uma nova.</>
             ) : (
               <Loading />
