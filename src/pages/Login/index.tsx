@@ -20,12 +20,7 @@ import SimpleBackdrop from 'components/atoms/loading2';
 
 function Copyright(props: { sx: { mt: number } }): JSX.Element {
   return (
-    <Typography
-      variant='body2'
-      color='text.secondary'
-      align='center'
-      {...props}
-    >
+    <Typography variant='body2' color='text.secondary' align='center' {...props}>
       {'Copyright © '}
       <Link color='inherit' href=''>
         Finance
@@ -51,7 +46,6 @@ function Login(): JSX.Element {
     setLoading(false);
   }, []);
 
-
   const handleClose = (event: React.SyntheticEvent | Event, reason?: string): void => {
     if (reason === 'clickaway') {
       return;
@@ -64,12 +58,7 @@ function Login(): JSX.Element {
       <Button color='secondary' size='small' onClick={handleClose}>
         UNDO
       </Button>
-      <IconButton
-        size='small'
-        aria-label='close'
-        color='inherit'
-        onClick={handleClose}
-      >
+      <IconButton size='small' aria-label='close' color='inherit' onClick={handleClose}>
         <CloseIcon fontSize='small' />
       </IconButton>
     </React.Fragment>
@@ -86,7 +75,7 @@ function Login(): JSX.Element {
     try {
       const isAuth = await auth.authenticate(fields.credential, fields.password);
       if (isAuth) {
-        navigate('/');
+        navigate('/Home');
       } else {
         setOpen(true);
       }
@@ -116,10 +105,7 @@ function Login(): JSX.Element {
               sx={{
                 backgroundImage: 'url(https://source.unsplash.com/random)',
                 backgroundRepeat: 'no-repeat',
-                backgroundColor: (t) =>
-                  t.palette.mode === 'light'
-                    ? t.palette.grey[50]
-                    : t.palette.grey[900],
+                backgroundColor: t => (t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900]),
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
               }}
@@ -168,17 +154,10 @@ function Login(): JSX.Element {
                     autoComplete='current-password'
                   />
                   <FormControlLabel
-                    control={
-                      <Checkbox name='remember' value='remember' color='primary' />
-                    }
+                    control={<Checkbox name='remember' value='remember' color='primary' />}
                     label='Lembrar'
                   />
-                  <Button
-                    type='submit'
-                    fullWidth
-                    variant='contained'
-                    sx={{ mt: 3, mb: 2 }}
-                  >
+                  <Button type='submit' fullWidth variant='contained' sx={{ mt: 3, mb: 2 }}>
                     Entrar
                   </Button>
                   <Grid container>
@@ -194,7 +173,9 @@ function Login(): JSX.Element {
             </Grid>
           </Grid>
         </ThemeProvider>
-      ) : (<SimpleBackdrop state={loading} />)}
+      ) : (
+        <SimpleBackdrop state={loading} />
+      )}
     </>
   );
 }

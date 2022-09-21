@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AppBar, Link, Box, Toolbar, IconButton, Typography, Grid, Card, CardActionArea } from '@mui/material';
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -9,7 +9,6 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { ICompany } from 'models/ICompany';
-import { AuthContext } from 'context/AuthProvider';
 import { Api } from 'services/api';
 
 const pages = ['Home'];
@@ -17,7 +16,7 @@ const pagesRoutes = ['/'];
 const settings = ['Dashboard', 'Sair'];
 const settingsRoutes = ['/dashboard/', '/logout'];
 
-const ResponsiveAppBar = (): JSX.Element => {
+const HomeMenu = (): JSX.Element => {
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
@@ -28,7 +27,7 @@ const ResponsiveAppBar = (): JSX.Element => {
         const response = await Api.get('company');
         setCompanies(response.data.data);
       } catch (err) {
-        console.log('oi', err);
+        console.log(err);
       }
     })();
   }, []);
@@ -173,38 +172,7 @@ const ResponsiveAppBar = (): JSX.Element => {
           </Toolbar>
         </Container>
       </AppBar>
-      <Box sx={{ fontWeight: 'bold', fontFamily: 'Helvetica' }}>
-        {companies && (
-          <Grid container spacing={2} sx={{ padding: '40px' }}>
-            {companies.map((company: ICompany) => (
-              <Grid item xs={12} md={6} lg={3} key={company.id}>
-                <Card
-                  sx={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    variant: 'outlined',
-                  }}
-                >
-                  <CardActionArea sx={{ padding: '40px' }}>
-                    <Box
-                      sx={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        flexDirection: 'column',
-                      }}
-                    >
-                      <img src={require('./twitter.png')} height='100' />
-                      <Typography sx={{ fontSize: '1.5rem', pt: '30px' }}>{company.name}</Typography>
-                    </Box>
-                  </CardActionArea>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
-        )}
-      </Box>
     </>
   );
 };
-export default ResponsiveAppBar;
+export default HomeMenu;
