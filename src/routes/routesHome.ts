@@ -1,21 +1,21 @@
-import HomeList from 'pages/Home/list';
+import Home from 'pages/home/list';
 import IRoutes from './IRoutes';
 
-const routesHome: IRoutes[] = [
+const routesDashboardHome: IRoutes[] = [
   {
     path: '/Home',
-    component: HomeList,
+    component: Home,
     protected: true,
-    visibleInDisplay: false,
+    visibleInDisplay: true,
     displayName: 'Home',
   },
   {
     path: '/',
-    component: HomeList,
+    component: Home,
     protected: true,
     visibleInDisplay: false,
     displayName: 'Home',
   },
 ];
 
-export default routesHome;
+export default routesDashboardHome;
