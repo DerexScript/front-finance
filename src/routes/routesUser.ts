@@ -1,4 +1,4 @@
-import AboutList from 'pages/dashboard/About/list';
+import AboutList from 'pages/Dashboard/About/list';
 import IRoutes from './IRoutes';
 
 const routesAbout: IRoutes[] = [

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import CustomMenu from 'components/Menu';
+import CustomMenu from 'components/menu';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { Api } from 'services/api';
 import Loading from 'components/atoms/loading';
@@ -16,6 +16,7 @@ const Role = (): JSX.Element => {
   const [rows, setRows] = useState<IRole[]>();
   const [role, setRole] = useState<IRole[]>();
   const [load, setLoad] = useState<boolean>(true);
+  const [buttonState, setButtonState] = useState<boolean>(false);
   const navigate = useNavigate();
   const auth = useAuth();
 
@@ -81,8 +82,10 @@ const Role = (): JSX.Element => {
               if (action == 'remove') {
                 if (window.confirm('Você deseja realmente deletar?')) {
                   try {
+                    setButtonState(true);
                     await Api.delete(`role/${id}`);
                     setRole(role.filter(r => r.id !== id));
+                    setButtonState(false);
                   } catch (e) {
                     toast.error('Erro ao deletar recurso');
                   }
@@ -92,6 +95,7 @@ const Role = (): JSX.Element => {
             return (
               <>
                 <Button
+                  disabled={buttonState}
                   size='small'
                   variant='contained'
                   sx={{ mr: '5px' }}
@@ -100,6 +104,7 @@ const Role = (): JSX.Element => {
                   Editar
                 </Button>
                 <Button
+                  disabled={buttonState}
                   size='small'
                   variant='outlined'
                   onClick={(evt): Promise<void> => handleClick(evt, 'remove')}
@@ -125,7 +130,7 @@ const Role = (): JSX.Element => {
       setColumns(column);
       setRows(rows1);
     }
-  }, [role]);
+  }, [buttonState, role]);
 
   return (
     <>

@@ -1,4 +1,4 @@
-import Companies from 'pages/dashboard/Companies';
+import Companies from 'pages/Dashboard/Companies';
 import IRoutes from './IRoutes';
 
 const routesCompanies: IRoutes[] = [

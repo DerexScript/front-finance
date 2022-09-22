@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { AppBar, Link, Box, Toolbar, IconButton, Typography, Grid, Card, CardActionArea } from '@mui/material';
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -9,7 +9,6 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import { ICompany } from 'models/ICompany';
-import { AuthContext } from 'context/AuthProvider';
 import { Api } from 'services/api';
 
 const pages = ['Home'];

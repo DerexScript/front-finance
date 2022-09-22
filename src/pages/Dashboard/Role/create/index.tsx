@@ -1,5 +1,5 @@
 import React, { ChangeEvent, FormEvent, useState } from 'react';
-import CustomMenu from 'components/Menu';
+import CustomMenu from 'components/menu';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import { Typography, Button, Snackbar, IconButton } from '@mui/material';

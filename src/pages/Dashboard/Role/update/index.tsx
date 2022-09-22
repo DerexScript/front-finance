@@ -1,5 +1,5 @@
 import React from 'react';
-import CustomMenu from 'components/Menu';
+import CustomMenu from 'components/menu';
 
 const RoleUpdate = (): JSX.Element => {
   return (

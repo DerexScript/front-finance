@@ -1,4 +1,4 @@
-import Home from 'pages/home/list';
+import Home from 'pages/Home/list';
 import IRoutes from './IRoutes';
 
 const routesDashboardHome: IRoutes[] = [
@@ -6,7 +6,7 @@ const routesDashboardHome: IRoutes[] = [
     path: '/Home',
     component: Home,
     protected: true,
-    visibleInDisplay: true,
+    visibleInDisplay: false,
     displayName: 'Home',
   },
   {

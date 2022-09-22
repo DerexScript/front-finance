@@ -3,6 +3,9 @@
         "naumovs.color-highlight",
         "steoates.autoimport",
         "wix.vscode-import-cost",
-        "esbenp.prettier-vscode"
+        "esbenp.prettier-vscode",
+        "dbaeumer.vscode-eslint",
+        "rvest.vs-code-prettier-eslint",
+        "christian-kohler.path-intellisense"
     ]
 }

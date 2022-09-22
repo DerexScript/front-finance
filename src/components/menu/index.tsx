@@ -9,14 +9,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
-import {
-  ListItemText,
-  Drawer,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-} from '@mui/material';
+import { ListItemText, Drawer, List, ListItem, ListItemButton, ListItemIcon } from '@mui/material';
 import LinkTwoToneIcon from '@mui/icons-material/LinkTwoTone';
 import routes from 'routes/routes';
 import { useNavigate } from 'react-router-dom';
@@ -40,34 +33,28 @@ function CustomMenu(): JSX.Element {
 
   const handleLogout = (): void => {
     authUser.logout();
-    navigate('/login');
+    // navigate('/login');
   };
 
-  const toggleDrawer =
-    (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
-      if (
-        event.type === 'keydown' &&
-        ((event as React.KeyboardEvent).key === 'Tab' ||
-          (event as React.KeyboardEvent).key === 'Shift')
-      ) {
-        return;
-      }
-      setDrawer(open);
-    };
+  const toggleDrawer = (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
+    if (
+      event.type === 'keydown' &&
+      ((event as React.KeyboardEvent).key === 'Tab' || (event as React.KeyboardEvent).key === 'Shift')
+    ) {
+      return;
+    }
+    setDrawer(open);
+  };
 
   return (
     <>
       <div>
         <Drawer anchor='left' open={drawer} onClose={(): void => setDrawer(false)}>
-          <Box
-            role='presentation'
-            onClick={toggleDrawer(false)}
-            onKeyDown={toggleDrawer(false)}
-          >
+          <Box role='presentation' onClick={toggleDrawer(false)} onKeyDown={toggleDrawer(false)}>
             <List>
               {routes
-                .filter((route) => route.visibleInDisplay)
-                .map((route) => (
+                .filter(route => route.visibleInDisplay)
+                .map(route => (
                   <ListItem
                     key={route.displayName}
                     onClick={(): void => {

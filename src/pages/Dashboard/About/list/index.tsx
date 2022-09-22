@@ -1,6 +1,6 @@
 import React from 'react';
-import CustomMenu from 'components/Menu';
-import { Box, Card } from '@mui/material';
+import CustomMenu from 'components/menu';
+import { Box } from '@mui/material';
 
 const About = (): JSX.Element => {
   return (
