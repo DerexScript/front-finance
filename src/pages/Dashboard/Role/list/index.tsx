@@ -175,8 +175,6 @@ const Role = (): JSX.Element => {
                 pageSize={5}
                 rowsPerPageOptions={[5]}
                 loading={tableLoad}
-                disableSelectionOnClick={true}
-                isRowSelectable={(): boolean => false}
               />
             ) : !load && rows?.length === 0 ? (
               <>Não há funções cadastradas no momento, adicione uma nova.</>
