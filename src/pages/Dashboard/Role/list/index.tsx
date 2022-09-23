@@ -157,7 +157,7 @@ const Role = (): JSX.Element => {
         <Grid item xs={12} display='flex' justifyContent='center' alignItems='center'>
           <div style={{ height: 400, width: '98%' }}>
             {columns?.length && rows?.length ? (
-              <DataGrid rows={rows} columns={columns} pageSize={5} rowsPerPageOptions={[5]} checkboxSelection />
+              <DataGrid rows={rows} columns={columns} pageSize={5} rowsPerPageOptions={[5]} />
             ) : !load && rows?.length === 0 ? (
               <>Não há funções cadastradas no momento, adicione uma nova.</>
             ) : (

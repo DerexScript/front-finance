@@ -48,8 +48,18 @@ function CustomMenu(): JSX.Element {
 
   return (
     <>
-      <div>
-        <Drawer anchor='left' open={drawer} onClose={(): void => setDrawer(false)}>
+      <div style={{ backgroundColor: '#00182c' }}>
+        <Drawer
+          PaperProps={{
+            sx: {
+              backgroundColor: '#cacccd',
+              color: '#00182c',
+            },
+          }}
+          anchor='left'
+          open={drawer}
+          onClose={(): void => setDrawer(false)}
+        >
           <Box role='presentation' onClick={toggleDrawer(false)} onKeyDown={toggleDrawer(false)}>
             <List>
               {routes
@@ -77,7 +87,7 @@ function CustomMenu(): JSX.Element {
       </div>
 
       <Box sx={{ flexGrow: 1 }}>
-        <AppBar position='static' sx={{ backgroundColor: '#ff6600' }}>
+        <AppBar position='static' sx={{ backgroundColor: '#00182C' }}>
           <Toolbar>
             <IconButton
               size='large'

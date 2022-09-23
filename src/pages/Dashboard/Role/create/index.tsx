@@ -7,6 +7,7 @@ import { Api } from 'services/api';
 import CloseIcon from '@mui/icons-material/Close';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const RoleCreate = (): JSX.Element => {
   const [name, setName] = useState<string>('');
@@ -66,6 +67,18 @@ const RoleCreate = (): JSX.Element => {
       />
       <Grid display='flex' justifyContent='center' container sx={{ '& .MuiTextField-root': { width: '100%' } }}>
         <Box sx={{ width: '60%', mt: 5 }} component='form' noValidate autoComplete='off' onSubmit={handleSubmit}>
+          <Button
+            color='info'
+            startIcon={<ArrowBackIcon />}
+            sx={{ mb: '10px' }}
+            size='large'
+            variant='outlined'
+            onClick={(): void => {
+              navigate(-1);
+            }}
+          >
+            Voltar
+          </Button>
           <Typography align='center' variant='h1' component='h2' sx={{ fontSize: '24px', mb: '1.5rem' }}>
             Adicionar Função
           </Typography>

@@ -6,6 +6,7 @@ import { Api } from 'services/api';
 import { AxiosError } from 'axios';
 import { toast } from 'react-toastify';
 import { useAuth } from 'context/AuthProvider/useAuth';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const RoleUpdate = (): JSX.Element => {
   const [name, setName] = useState<string>('');
@@ -73,8 +74,20 @@ const RoleUpdate = (): JSX.Element => {
           '& .MuiTextField-root': { width: '100%' },
         }}
       >
-        <Box component='form' sx={{ width: '60%' }} noValidate autoComplete='off' onSubmit={handleSubmit}>
-          <Grid item xs={12} sx={{ mt: 5 }}>
+        <Box component='form' sx={{ width: '60%', mt: 5 }} noValidate autoComplete='off' onSubmit={handleSubmit}>
+          <Button
+            color='info'
+            startIcon={<ArrowBackIcon />}
+            sx={{ mb: '10px' }}
+            size='large'
+            variant='outlined'
+            onClick={(): void => {
+              navigate(-1);
+            }}
+          >
+            Voltar
+          </Button>
+          <Grid item xs={12}>
             <Typography align='center' variant='h1' component='h2' sx={{ fontSize: '24px', mb: '1.5rem' }}>
               Adicionar Função
             </Typography>
