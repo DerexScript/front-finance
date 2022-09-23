@@ -16,6 +16,7 @@ const Role = (): JSX.Element => {
   const [rows, setRows] = useState<IRole[]>();
   const [role, setRole] = useState<IRole[]>();
   const [load, setLoad] = useState<boolean>(true);
+  const [tableLoad, setTableLoad] = useState<boolean>(true);
   const [buttonState, setButtonState] = useState<boolean>(false);
   const navigate = useNavigate();
   const auth = useAuth();
@@ -26,6 +27,7 @@ const Role = (): JSX.Element => {
         const response = await Api.get('role');
         setRole(response.data.data);
         setLoad(false);
+        setTableLoad(false);
       } catch (error) {
         const err = error as AxiosError;
         if (err.response?.data == 'Unauthorized.' && err.response?.status == 401) {
@@ -94,7 +96,9 @@ const Role = (): JSX.Element => {
                 if (window.confirm('Você deseja realmente deletar?')) {
                   try {
                     setButtonState(true);
+                    setTableLoad(true);
                     await Api.delete(`role/${id}`);
+                    setTableLoad(false);
                     setRole(role.filter(r => r.id !== id));
                     setButtonState(false);
                   } catch (e) {
@@ -163,7 +167,17 @@ const Role = (): JSX.Element => {
         <Grid item xs={12} display='flex' justifyContent='center' alignItems='center'>
           <div style={{ height: 400, width: '98%' }}>
             {columns?.length && rows?.length ? (
-              <DataGrid rows={rows} columns={columns} pageSize={5} rowsPerPageOptions={[5]} />
+              <DataGrid
+                hideFooterSelectedRowCount
+                disableColumnSelector
+                rows={rows}
+                columns={columns}
+                pageSize={5}
+                rowsPerPageOptions={[5]}
+                loading={tableLoad}
+                disableSelectionOnClick={true}
+                isRowSelectable={(): boolean => false}
+              />
             ) : !load && rows?.length === 0 ? (
               <>Não há funções cadastradas no momento, adicione uma nova.</>
             ) : (
