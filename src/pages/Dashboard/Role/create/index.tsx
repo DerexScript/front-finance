@@ -2,7 +2,7 @@ import React, { ChangeEvent, FormEvent, useState } from 'react';
 import CustomMenu from 'components/menu';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import { Typography, Button, Snackbar, IconButton } from '@mui/material';
+import { Typography, Button, Snackbar, IconButton, Grid } from '@mui/material';
 import { Api } from 'services/api';
 import CloseIcon from '@mui/icons-material/Close';
 import { toast } from 'react-toastify';
@@ -46,7 +46,7 @@ const RoleCreate = (): JSX.Element => {
   const action = (
     <React.Fragment>
       <Button color='secondary' size='small' onClick={handleClose}>
-        UNDO
+        Fechar
       </Button>
       <IconButton size='small' aria-label='close' color='inherit' onClick={handleClose}>
         <CloseIcon fontSize='small' />
@@ -64,49 +64,40 @@ const RoleCreate = (): JSX.Element => {
         message='Role adicionada com sucesso'
         action={action}
       />
-      <Box
-        component='form'
-        sx={{
-          '& .MuiTextField-root': { width: '100%' },
-        }}
-        noValidate
-        autoComplete='off'
-        onSubmit={handleSubmit}
-      >
-        <Typography align='center' variant='h1' sx={{ fontSize: '24px', mb: '1.5rem' }}>
-          Adicionar Função
-        </Typography>
-        <TextField
-          sx={{ mt: '10px' }}
-          id='outlined-password-input'
-          label='Nome'
-          type='text'
-          name='name'
-          autoComplete='nome'
-          onChange={(evt: ChangeEvent<HTMLInputElement>): void => setName(evt.target.value)}
-        />
-        <TextField
-          sx={{ mt: '10px' }}
-          id='outlined-password-input'
-          label='Descrição'
-          type='text'
-          name='description'
-          autoComplete='nome'
-          onChange={(evt: ChangeEvent<HTMLInputElement>): void => setDescription(evt.target.value)}
-        />
-        <TextField
-          sx={{ mt: '10px' }}
-          id='outlined-password-input'
-          label='Papel'
-          type='text'
-          name='role'
-          autoComplete='nome'
-          onChange={(evt: ChangeEvent<HTMLInputElement>): void => setRole(evt.target.value)}
-        />
-        <Button type='submit' sx={{ mt: '10px', width: '100%' }} size='large' variant='contained'>
-          Cadastrar
-        </Button>
-      </Box>
+      <Grid display='flex' justifyContent='center' container sx={{ '& .MuiTextField-root': { width: '100%' } }}>
+        <Box sx={{ width: '60%', mt: 5 }} component='form' noValidate autoComplete='off' onSubmit={handleSubmit}>
+          <Typography align='center' variant='h1' component='h2' sx={{ fontSize: '24px', mb: '1.5rem' }}>
+            Adicionar Função
+          </Typography>
+          <TextField
+            sx={{ mt: '10px' }}
+            label='Nome'
+            type='text'
+            name='name'
+            autoComplete='nome'
+            onChange={(evt: ChangeEvent<HTMLInputElement>): void => setName(evt.target.value)}
+          />
+          <TextField
+            sx={{ mt: '10px' }}
+            label='Descrição'
+            type='text'
+            name='description'
+            autoComplete='nome'
+            onChange={(evt: ChangeEvent<HTMLInputElement>): void => setDescription(evt.target.value)}
+          />
+          <TextField
+            sx={{ mt: '10px' }}
+            label='Papel'
+            type='text'
+            name='role'
+            autoComplete='nome'
+            onChange={(evt: ChangeEvent<HTMLInputElement>): void => setRole(evt.target.value)}
+          />
+          <Button type='submit' sx={{ mt: '10px', width: '100%' }} size='large' variant='contained'>
+            Cadastrar
+          </Button>
+        </Box>
+      </Grid>
     </>
   );
 };

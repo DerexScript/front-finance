@@ -126,13 +126,7 @@ function Login(): JSX.Element {
                 <Typography component='h1' variant='h5'>
                   Entrar
                 </Typography>
-                <Box
-                  component='form'
-                  noValidate
-                  // eslint-disable-next-line @typescript-eslint/no-misused-promises
-                  onSubmit={handleSubmit}
-                  sx={{ mt: 1 }}
-                >
+                <Box component='form' noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
                   <TextField
                     margin='normal'
                     required

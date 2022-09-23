@@ -3,7 +3,7 @@ import CustomMenu from 'components/menu';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { Api } from 'services/api';
 import Loading from 'components/atoms/loading';
-import { Button, Grid, Stack } from '@mui/material';
+import { Button, Grid, Stack, Typography } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from 'context/AuthProvider/useAuth';
@@ -48,13 +48,18 @@ const Role = (): JSX.Element => {
           width: 15,
         },
         {
+          field: 'name',
+          headerName: 'Nome',
+          width: 150,
+        },
+        {
           field: 'description',
           headerName: 'Descrição',
           width: 150,
         },
         {
           field: 'role',
-          headerName: 'Role',
+          headerName: 'Função',
           width: 150,
         },
         {
@@ -135,7 +140,7 @@ const Role = (): JSX.Element => {
   return (
     <>
       <CustomMenu />
-      <Stack direction='row' spacing={2} sx={{ mt: '10px', display: 'flex', justifyContent: 'flex-end', mr: '5px' }}>
+      <Stack direction='row' spacing={2} sx={{ mt: '10px', display: 'flex', justifyContent: 'flex-end', mr: '1%' }}>
         <Button
           color='success'
           variant='contained'
@@ -145,9 +150,12 @@ const Role = (): JSX.Element => {
           Adicionar
         </Button>
       </Stack>
+      <Typography align='center' variant='h1' component='h2' sx={{ fontSize: '24px', mb: '1.5rem' }}>
+        Funções Cadastradas
+      </Typography>
       <Grid container sx={{ mt: '10px' }}>
-        <Grid item xs={12}>
-          <div style={{ height: 400, width: '100%' }}>
+        <Grid item xs={12} display='flex' justifyContent='center' alignItems='center'>
+          <div style={{ height: 400, width: '98%' }}>
             {columns?.length && rows?.length ? (
               <DataGrid rows={rows} columns={columns} pageSize={5} rowsPerPageOptions={[5]} checkboxSelection />
             ) : !load && rows?.length === 0 ? (
