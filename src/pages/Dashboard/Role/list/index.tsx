@@ -50,32 +50,38 @@ const Role = (): JSX.Element => {
         {
           field: 'name',
           headerName: 'Nome',
-          width: 150,
+          minWidth: 110,
+          flex: 1,
         },
         {
           field: 'description',
           headerName: 'Descrição',
-          width: 150,
+          minWidth: 110,
+          flex: 1,
         },
         {
           field: 'role',
           headerName: 'Função',
-          width: 150,
+          minWidth: 110,
+          flex: 1,
         },
         {
           field: 'created_at',
           headerName: 'Criado Em',
-          width: 150,
+          minWidth: 105,
+          flex: 1,
         },
         {
           field: 'updated_at',
           headerName: 'Atualizado Em',
-          width: 150,
+          minWidth: 100,
+          flex: 1,
         },
         {
           field: 'Actions',
           headerName: 'Ações',
-          width: 150,
+          minWidth: 150,
+          flex: 1,
           renderCell: (params: GridRenderCellParams): JSX.Element => {
             const handleClick = async (evt: React.MouseEvent<HTMLButtonElement>, action: string): Promise<void> => {
               evt.preventDefault();
