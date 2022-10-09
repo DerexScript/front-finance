@@ -3,7 +3,7 @@ import CustomMenu from 'components/menu';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import { Typography, Button, Snackbar, IconButton, Grid } from '@mui/material';
-import { Api } from 'services/api';
+import { useAxios } from 'services/hooks/useAxios';
 import CloseIcon from '@mui/icons-material/Close';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
@@ -18,21 +18,24 @@ const RoleCreate = (): JSX.Element => {
 
   const handleSubmit = async (evt: FormEvent<HTMLFormElement>): Promise<void> => {
     evt.preventDefault();
-    try {
-      const response = await Api.post('role', {
+    const { response } = await useAxios({
+      method: 'post',
+      url: 'role',
+      data: {
         name: name,
         description: description,
         role: role,
+      },
+    });
+
+    if (response) {
+      setOpen(true);
+      toast.success('Role adicionada com sucesso.', {
+        onClose: () => {
+          navigate(-1);
+        },
       });
-      if (response.status === 201) {
-        setOpen(true);
-        toast.success('Role adicionada com sucesso.', {
-          onClose: () => {
-            navigate(-1);
-          },
-        });
-      }
-    } catch (error) {
+    } else {
       toast.error('Erro ao criar Role.');
     }
   };

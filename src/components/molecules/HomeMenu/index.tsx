@@ -8,7 +8,7 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
-import { Api } from 'services/api';
+import { useAxios } from 'services/hooks/useAxios';
 
 const pages = ['Home'];
 const pagesRoutes = ['/'];
@@ -22,11 +22,9 @@ const HomeMenu = (): JSX.Element => {
   const [companies, setCompanies] = useState([]);
   useEffect(() => {
     void (async (): Promise<void> => {
-      try {
-        const response = await Api.get('company');
-        setCompanies(response.data.data);
-      } catch (err) {
-        console.log(err);
+      const { response } = await useAxios({ method: 'get', url: 'company' });
+      if (response) {
+        setCompanies(response.data);
       }
     })();
   }, []);

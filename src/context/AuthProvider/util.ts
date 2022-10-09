@@ -1,5 +1,5 @@
 import { IUser } from './type';
-import { Api } from '../../services/api';
+import { useAxios } from 'services/hooks/useAxios';
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export const setUserLocalStorage = (user: IUser | null) => {
@@ -16,11 +16,14 @@ export const getUserLocalStorage = () => {
   return user ?? null;
 };
 
-export async function LoginRequest(credential: string, password: string): Promise<{token: string} | null> {
-  try {
-    const req = await Api.post('login', { credential, password });
-    return req.data.data;
-  } catch (error) {
-    return null;
+export async function LoginRequest(credential: string, password: string): Promise<{ token: string } | null> {
+  const { response } = await useAxios({
+    method: 'post',
+    url: 'login',
+    data: { credential, password },
+  });
+  if (response) {
+    return response.data;
   }
+  return null;
 }

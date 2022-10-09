@@ -18,12 +18,10 @@ import {
 import { DeleteOutlined, Edit, Save, Close, Add } from '@mui/icons-material';
 import { Button, Grid, Stack } from '@mui/material';
 import { randomId } from '@mui/x-data-grid-generator';
-import { Api } from 'services/api';
-import { AxiosError } from 'axios';
+import { useAxios } from 'services/hooks/useAxios';
 import { toast } from 'react-toastify';
 import { useAuth } from 'context/AuthProvider/useAuth';
 import { useConfirm } from 'material-ui-confirm';
-// import Loading from 'components/atoms/loadingv2';
 
 interface EditToolbarProps {
   setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
@@ -34,17 +32,19 @@ interface EditToolbarProps {
 function EditToolbar(props: EditToolbarProps): JSX.Element {
   const { setRows, setRowModesModel, setPage } = props;
   const handleClick = (): void => {
-    setPage(999);
     const id = randomId();
     setRows(oldRows => [...oldRows, { id, name: '', description: '', role: '', isNew: true }]);
     setRowModesModel(oldModel => ({
       ...oldModel,
       [id]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
     }));
+    setTimeout(() => {
+      setPage(999);
+    }, 200);
   };
   return (
     <GridToolbarContainer>
-      <Button color='primary' startIcon={<Add />} onClick={handleClick}>
+      <Button variant='outlined' color='primary' startIcon={<Add />} onClick={handleClick}>
         Adicionar Role
       </Button>
     </GridToolbarContainer>
@@ -57,28 +57,31 @@ const Role = (): JSX.Element => {
   const [pageSize, setPageSize] = useState(5);
   const [page, setPage] = React.useState(999);
   const [tableLoad, setTableLoad] = useState<boolean>(true);
+  const [statusButtons, setStatusButtons] = useState<boolean>(true);
   const auth = useAuth();
   const confirm = useConfirm();
 
   const handleSaveClick = (id: GridRowId) => () => {
+    setStatusButtons(false);
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
   };
 
   const handleEditClick = (id: GridRowId) => () => {
+    setStatusButtons(true);
     const newRow = { ...rowModesModel, [id]: { mode: GridRowModes.Edit, fieldToFocus: 'name' } };
     setRowModesModel(newRow);
   };
 
   const handleDeleteClick = (id: GridRowId) => async () => {
-    confirm({ description: `Deseja apagar a role ${id}`, title: 'Aviso' })
+    setStatusButtons(true);
+    await confirm({ description: `Deseja apagar a role ${id}`, title: 'Aviso' })
       .then(async () => {
         const newRows = rows?.filter(row => row.id !== id);
-        try {
-          await Api.delete(`role/${id}`);
+        const { response, error } = await useAxios({ method: 'delete', url: `role/${id}` });
+        if (response) {
           setRows(newRows);
-        } catch (error) {
-          const err = error as AxiosError;
-          if (err.response?.data == 'Unauthorized.' && err.response?.status == 401) {
+        } else {
+          if (error?.data == 'Unauthorized.' && error?.status == 401) {
             toast.error('Sessão do usuario expirada, faça login novamente!', {
               onClose: () => {
                 auth.logout();
@@ -91,9 +94,11 @@ const Role = (): JSX.Element => {
       .catch(() => {
         console.log('Deletion cancelled.');
       });
+    setStatusButtons(false);
   };
 
   const handleCancelClick = (id: GridRowId) => () => {
+    setStatusButtons(false);
     setRowModesModel({
       ...rowModesModel,
       [id]: { mode: GridRowModes.View, ignoreModifications: true },
@@ -107,32 +112,36 @@ const Role = (): JSX.Element => {
 
   useEffect(() => {
     (async (): Promise<void> => {
-      try {
-        const response = await Api.get('role');
-        setRows(response.data.data);
-        setTableLoad(false);
-      } catch (error) {
-        const err = error as AxiosError;
-        if (err.response?.data == 'Unauthorized.' && err.response?.status == 401) {
+      const { response, error, axiosLoading } = await useAxios({ url: `role` });
+      if (response) {
+        setRows(response.data);
+        setStatusButtons(false);
+      } else {
+        if (error?.data == 'Unauthorized.' && error?.status == 401) {
           toast.error('Sessão do usuario expirada, faça login novamente!', {
             onClose: () => {
               auth.logout();
             },
           });
         }
+        if (error?.status == 0) {
+          toast.error('Erro ao obter Roles');
+        }
       }
+      setTableLoad(axiosLoading);
     })();
   }, []);
 
   const columns: GridColumns = [
-    { field: 'name', headerName: 'Name', width: 150, editable: true },
-    { field: 'description', headerName: 'Description', width: 150, editable: true },
-    { field: 'role', headerName: 'Role', width: 150, editable: true },
+    { field: 'name', headerName: 'Name', minWidth: 110, flex: 1, editable: true },
+    { field: 'description', headerName: 'Description', minWidth: 110, flex: 1, editable: true },
+    { field: 'role', headerName: 'Role', minWidth: 110, flex: 1, editable: true },
     {
       field: 'actions',
       type: 'actions',
       headerName: 'Actions',
-      width: 100,
+      minWidth: 110,
+      flex: 1,
       cellClassName: 'actions',
       getActions: ({ id }): React.ReactElement<GridActionsCellItemProps, string>[] => {
         const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
@@ -151,6 +160,7 @@ const Role = (): JSX.Element => {
         }
         return [
           <GridActionsCellItem
+            disabled={statusButtons}
             key={1}
             icon={<Edit />}
             label='Edit'
@@ -159,6 +169,7 @@ const Role = (): JSX.Element => {
             color='inherit'
           />,
           <GridActionsCellItem
+            disabled={statusButtons}
             key={2}
             icon={<DeleteOutlined />}
             label='Delete'
@@ -180,12 +191,11 @@ const Role = (): JSX.Element => {
   const processRowUpdate = async (newRow: GridRowModel): Promise<GridRowModel> => {
     const updatedRow = { ...newRow, isNew: false };
     if (!newRow.isNew) {
-      try {
-        await Api.put(`role/${newRow.id}`, newRow);
+      const { response, error } = await useAxios({ method: 'put', url: `role/${newRow.id}`, data: newRow });
+      if (response) {
         setRows(rows?.map(row => (row.id === newRow.id ? updatedRow : row)));
-      } catch (error) {
-        const err = error as AxiosError;
-        if (err.response?.data == 'Unauthorized.' && err.response?.status == 401) {
+      } else {
+        if (error?.data == 'Unauthorized.' && error?.status == 401) {
           toast.error('Sessão do usuario expirada, faça login novamente!', {
             onClose: () => {
               auth.logout();
@@ -194,18 +204,21 @@ const Role = (): JSX.Element => {
         }
       }
     } else {
-      try {
-        const response = await Api.post(`role`, newRow);
-        const formatedRow = { ...updatedRow, id: response.data.response.data.id };
+      const { response, error } = await useAxios({ method: 'post', url: `role`, data: newRow });
+      if (response) {
+        const formatedRow = { ...updatedRow, id: response.data.id };
         setRows(rows?.map(row => (row.id === newRow.id ? formatedRow : row)));
-      } catch (error) {
-        const err = error as AxiosError;
-        if (err.response?.data == 'Unauthorized.' && err.response?.status == 401) {
+      } else {
+        if (error?.data == 'Unauthorized.' && error?.status == 401) {
           toast.error('Sessão do usuario expirada, faça login novamente!', {
             onClose: () => {
               auth.logout();
             },
           });
+        }
+        if (error?.status !== 201) {
+          toast.error('Erro ao inserir nova role');
+          setRows(rows?.filter(row => row.id !== newRow.id));
         }
       }
     }

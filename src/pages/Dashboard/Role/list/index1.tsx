@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import CustomMenu from 'components/menu';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
-import { Api } from 'services/api';
+import { useAxios } from 'services/hooks/useAxios';
 import Loading from 'components/atoms/loading';
 import { Button, Grid, Stack, Typography } from '@mui/material';
 import { Add } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from 'context/AuthProvider/useAuth';
-import { AxiosError } from 'axios';
 import { toast } from 'react-toastify';
 import { IRole } from './IRole';
 
@@ -23,14 +22,13 @@ const Role = (): JSX.Element => {
 
   useEffect((): void => {
     (async (): Promise<void> => {
-      try {
-        const response = await Api.get('role');
-        setRole(response.data.data);
+      const { response, error } = await useAxios({ url: 'role' });
+      if (response) {
+        setRole(response.data);
         setLoad(false);
         setTableLoad(false);
-      } catch (error) {
-        const err = error as AxiosError;
-        if (err.response?.data == 'Unauthorized.' && err.response?.status == 401) {
+      } else {
+        if (error?.data == 'Unauthorized.' && error?.status == 401) {
           toast.error('Sessão do usuario expirada, faça login novamente!', {
             onClose: () => {
               auth.logout();
@@ -95,14 +93,14 @@ const Role = (): JSX.Element => {
               }
               if (action == 'remove') {
                 if (window.confirm('Você deseja realmente deletar?')) {
-                  try {
-                    setButtonState(true);
-                    setTableLoad(true);
-                    await Api.delete(`role/${id}`);
+                  setButtonState(true);
+                  setTableLoad(true);
+                  const { response } = await useAxios({ method: 'delete', url: `role/${id}` });
+                  if (response) {
                     setTableLoad(false);
                     setRole(role.filter(r => r.id !== id));
                     setButtonState(false);
-                  } catch (e) {
+                  } else {
                     toast.error('Erro ao deletar recurso');
                   }
                 }

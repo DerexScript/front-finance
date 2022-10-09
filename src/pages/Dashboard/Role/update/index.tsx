@@ -2,8 +2,7 @@ import React, { FormEvent, useEffect, useState } from 'react';
 import CustomMenu from 'components/menu';
 import { Box, Button, Grid, TextField, Typography } from '@mui/material';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Api } from 'services/api';
-import { AxiosError } from 'axios';
+import { useAxios } from 'services/hooks/useAxios';
 import { toast } from 'react-toastify';
 import { useAuth } from 'context/AuthProvider/useAuth';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -20,40 +19,38 @@ const RoleUpdate = (): JSX.Element => {
 
   const handleSubmit = async (evt: FormEvent<HTMLFormElement>): Promise<void> => {
     evt.preventDefault();
-    try {
-      await Api.put(`role/${idRole}`, {
+    const { response, error } = await useAxios({
+      method: 'put',
+      url: `role/${idRole}`,
+      data: {
         name: name,
         description: description,
         role: role,
-      });
-      toast.success('Role editada com sucesso', {
-        onClose: () => {
-          navigate(-1);
-        },
-      });
-    } catch (error) {
-      const err = error as AxiosError;
-      if (err.response?.data == 'Unauthorized.' && err.response?.status == 401) {
+      },
+    });
+    if (response) {
+      toast.success('Role editada com sucesso');
+    } else {
+      if (error?.data == 'Unauthorized.' && error?.status == 401) {
         toast.error('Sessão do usuario expirada, faça login novamente!', {
           onClose: () => {
             auth.logout();
           },
         });
       }
-      navigate(-1);
     }
+    navigate(-1);
   };
 
   useEffect(() => {
     (async (): Promise<void> => {
-      try {
-        const role = await Api.get(`role/${idRole}`);
-        setName(role.data.data.name);
-        setDescription(role.data.data.description);
-        setRole(role.data.data.role);
-      } catch (error) {
-        const err = error as AxiosError;
-        if (err.response?.data == 'Unauthorized.' && err.response?.status == 401) {
+      const { response, error } = await useAxios({ url: `role/${idRole}` });
+      if (response) {
+        setName(response.data.name);
+        setDescription(response.data.description);
+        setRole(response.data.role);
+      } else {
+        if (error?.data == 'Unauthorized.' && error?.status == 401) {
           toast.error('Sessão do usuario expirada, faça login novamente!', {
             onClose: () => {
               auth.logout();
