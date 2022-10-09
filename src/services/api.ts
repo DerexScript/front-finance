@@ -2,7 +2,8 @@ import { getUserLocalStorage } from './../context/AuthProvider/util';
 import axios, { AxiosRequestConfig } from 'axios';
 
 export const Api = axios.create({
-  baseURL: 'http://localhost:8000/api/v1/',
+  // baseURL: 'http://localhost:8000/api/v1/',
+  baseURL: 'https://api.finanies.tk/api/v1/',
   withCredentials: false,
 });
 
