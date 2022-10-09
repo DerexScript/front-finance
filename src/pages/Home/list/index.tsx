@@ -8,7 +8,6 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
-import { ICompany } from 'models/ICompany';
 import { Api } from 'services/api';
 
 const pages = ['Home'];
@@ -175,7 +174,7 @@ const ResponsiveAppBar = (): JSX.Element => {
       <Box sx={{ fontWeight: 'bold', fontFamily: 'Helvetica' }}>
         {companies && (
           <Grid container spacing={2} sx={{ padding: '40px' }}>
-            {companies.map((company: ICompany) => (
+            {companies.map((company: { id: number; name: string }) => (
               <Grid item xs={12} md={6} lg={3} key={company.id}>
                 <Card
                   sx={{

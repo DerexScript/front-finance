@@ -1,14 +1,9 @@
 import React from 'react';
-import {
-  Routes as Switch,
-  Route,
-  BrowserRouter as Router,
-  Navigate,
-} from 'react-router-dom';
+import { Routes as Switch, Route, BrowserRouter as Router, Navigate } from 'react-router-dom';
 import routes from './routes';
 import Login from 'pages/Login';
 import { AuthProvider } from 'context/AuthProvider';
-import { ProtectedLayout } from 'components/ProtectedLayout';
+import { ProtectedLayout } from 'ProtectedLayout';
 import Logout from 'pages/Logout';
 
 function Routes(): JSX.Element {

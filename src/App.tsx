@@ -1,6 +1,7 @@
 import React from 'react';
 import Routes from './routes';
 import { ToastContainer } from 'react-toastify';
+import { ConfirmProvider } from 'material-ui-confirm';
 
 function App(): JSX.Element {
   return (
@@ -17,7 +18,9 @@ function App(): JSX.Element {
         limit={4}
         pauseOnHover
       />
-      <Routes />
+      <ConfirmProvider>
+        <Routes />
+      </ConfirmProvider>
     </>
   );
 }
