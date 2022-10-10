@@ -160,6 +160,7 @@ const Role = (): JSX.Element => {
             onClose={(): void => {
               handleTooltipClose(params.row.id);
             }}
+            disableInteractive
             TransitionComponent={Zoom}
             title={params.row.name}
             arrow
@@ -188,6 +189,7 @@ const Role = (): JSX.Element => {
             onClose={(): void => {
               handleTooltipClose(params.row.id);
             }}
+            disableInteractive
             title={params.row.description}
             arrow
             TransitionComponent={Zoom}
@@ -216,6 +218,7 @@ const Role = (): JSX.Element => {
             onClose={(): void => {
               handleTooltipClose(params.row.id);
             }}
+            disableInteractive
             title={params.row.role}
             arrow
             TransitionComponent={Zoom}
