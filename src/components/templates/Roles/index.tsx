@@ -5,6 +5,7 @@ import {
   GridActionsCellItemProps,
   GridColumns,
   GridEventListener,
+  GridRenderCellParams,
   GridRowId,
   GridRowModel,
   GridRowModes,
@@ -16,7 +17,7 @@ import {
   MuiEvent,
 } from '@mui/x-data-grid';
 import { DeleteOutlined, Edit, Save, Close, Add } from '@mui/icons-material';
-import { Button, Grid, Stack } from '@mui/material';
+import { Button, Grid, Stack, Tooltip } from '@mui/material';
 import { randomId } from '@mui/x-data-grid-generator';
 import { useAxios } from 'utils/useAxios';
 import { toast } from 'react-toastify';
@@ -133,9 +134,46 @@ const Role = (): JSX.Element => {
   }, []);
 
   const columns: GridColumns = [
-    { field: 'name', headerName: 'Name', flex: 1, editable: true },
-    { field: 'description', headerName: 'Description', flex: 1, editable: true },
-    { field: 'role', headerName: 'Role', flex: 1, editable: true },
+    { field: 'id', headerName: 'ID', flex: 1, hide: true },
+    {
+      field: 'name',
+      headerName: 'Name',
+      flex: 1,
+      editable: true,
+      renderCell: (params: GridRenderCellParams): JSX.Element => {
+        return (
+          <Tooltip title={params.row.name} arrow>
+            <span>{params.row.name}</span>
+          </Tooltip>
+        );
+      },
+    },
+    {
+      field: 'description',
+      headerName: 'Description',
+      flex: 1,
+      editable: true,
+      renderCell: (params: GridRenderCellParams): JSX.Element => {
+        return (
+          <Tooltip title={params.row.description} arrow>
+            <span>{params.row.description}</span>
+          </Tooltip>
+        );
+      },
+    },
+    {
+      field: 'role',
+      headerName: 'Role',
+      flex: 1,
+      editable: true,
+      renderCell: (params: GridRenderCellParams): JSX.Element => {
+        return (
+          <Tooltip title={params.row.role} arrow>
+            <span>{params.row.role}</span>
+          </Tooltip>
+        );
+      },
+    },
     {
       field: 'actions',
       type: 'actions',
