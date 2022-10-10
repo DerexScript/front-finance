@@ -59,8 +59,19 @@ const Role = (): JSX.Element => {
   const [page, setPage] = useState(999);
   const [tableLoad, setTableLoad] = useState<boolean>(true);
   const [statusButtons, setStatusButtons] = useState<boolean>(true);
-  const [openTooltip, setOpenTooltip] = useState<{ id: number; state: boolean }[]>();
-
+  const [openTooltip, setOpenTooltip] = useState<{ id: number; cell: string; state: boolean }[]>([
+    { id: 0, cell: '', state: false },
+  ]);
+  const handleTooltipClose = (id: number): void => {
+    setOpenTooltip(openTooltip.filter(x => x.id !== id));
+  };
+  const handleTooltipOpen = (id: number, cell: string): void => {
+    setOpenTooltip([...openTooltip, { id: id, cell: cell, state: true }]);
+  };
+  const handleTooltipIsOpen = (id: number, cell: string): boolean => {
+    const isOPen = openTooltip.find(x => x.id === id && x.cell === cell);
+    return isOPen !== undefined;
+  };
   const auth = useAuth();
   const confirm = useConfirm();
 
@@ -144,8 +155,21 @@ const Role = (): JSX.Element => {
       editable: true,
       renderCell: (params: GridRenderCellParams): JSX.Element => {
         return (
-          <Tooltip TransitionComponent={Zoom} title={params.row.name} arrow>
-            <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+          <Tooltip
+            open={handleTooltipIsOpen(params.row.id, 'name')}
+            onClose={(): void => {
+              handleTooltipClose(params.row.id);
+            }}
+            TransitionComponent={Zoom}
+            title={params.row.name}
+            arrow
+          >
+            <span
+              onClick={(): void => {
+                handleTooltipOpen(params.row.id, 'name');
+              }}
+              style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
+            >
               {params.row.name}
             </span>
           </Tooltip>
@@ -159,8 +183,21 @@ const Role = (): JSX.Element => {
       editable: true,
       renderCell: (params: GridRenderCellParams): JSX.Element => {
         return (
-          <Tooltip title={params.row.description} arrow TransitionComponent={Zoom}>
-            <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+          <Tooltip
+            open={handleTooltipIsOpen(params.row.id, 'description')}
+            onClose={(): void => {
+              handleTooltipClose(params.row.id);
+            }}
+            title={params.row.description}
+            arrow
+            TransitionComponent={Zoom}
+          >
+            <span
+              onClick={(): void => {
+                handleTooltipOpen(params.row.id, 'description');
+              }}
+              style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
+            >
               {params.row.description}
             </span>
           </Tooltip>
@@ -173,29 +210,20 @@ const Role = (): JSX.Element => {
       flex: 1,
       editable: true,
       renderCell: (params: GridRenderCellParams): JSX.Element => {
-        const handleTooltipClose = (): void => {
-          setOpenTooltip(openTooltip?.filter(x => x.id !== params.row.id));
-        };
-
-        const handleTooltipOpen = (): void => {
-          const too = [{ id: params.row.id as number, state: true }];
-          setOpenTooltip(too as { id: number; state: true }[]);
-        };
-
-        const handleTooltipIsOpen = (): boolean => {
-          const isOPen = openTooltip?.find(x => x.id === params.row.id);
-          return isOPen !== undefined;
-        };
         return (
           <Tooltip
-            open={handleTooltipIsOpen()}
-            onClose={handleTooltipClose}
+            open={handleTooltipIsOpen(params.row.id, 'role')}
+            onClose={(): void => {
+              handleTooltipClose(params.row.id);
+            }}
             title={params.row.role}
             arrow
             TransitionComponent={Zoom}
           >
             <span
-              onClick={handleTooltipOpen}
+              onClick={(): void => {
+                handleTooltipOpen(params.row.id, 'role');
+              }}
               style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
             >
               {params.row.role}
