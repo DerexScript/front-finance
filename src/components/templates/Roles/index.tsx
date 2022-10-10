@@ -17,7 +17,7 @@ import {
   MuiEvent,
 } from '@mui/x-data-grid';
 import { DeleteOutlined, Edit, Save, Close, Add } from '@mui/icons-material';
-import { Button, Grid, Stack, Tooltip } from '@mui/material';
+import { Button, Grid, Stack, Tooltip, Zoom } from '@mui/material';
 import { randomId } from '@mui/x-data-grid-generator';
 import { useAxios } from 'utils/useAxios';
 import { toast } from 'react-toastify';
@@ -142,8 +142,10 @@ const Role = (): JSX.Element => {
       editable: true,
       renderCell: (params: GridRenderCellParams): JSX.Element => {
         return (
-          <Tooltip title={params.row.name} arrow>
-            <span>{params.row.name}</span>
+          <Tooltip TransitionComponent={Zoom} title={params.row.name} arrow>
+            <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              {params.row.name}
+            </span>
           </Tooltip>
         );
       },
@@ -155,8 +157,10 @@ const Role = (): JSX.Element => {
       editable: true,
       renderCell: (params: GridRenderCellParams): JSX.Element => {
         return (
-          <Tooltip title={params.row.description} arrow>
-            <span>{params.row.description}</span>
+          <Tooltip title={params.row.description} arrow TransitionComponent={Zoom}>
+            <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              {params.row.description}
+            </span>
           </Tooltip>
         );
       },
@@ -168,8 +172,10 @@ const Role = (): JSX.Element => {
       editable: true,
       renderCell: (params: GridRenderCellParams): JSX.Element => {
         return (
-          <Tooltip title={params.row.role} arrow>
-            <span>{params.row.role}</span>
+          <Tooltip title={params.row.role} arrow TransitionComponent={Zoom}>
+            <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              {params.row.role}
+            </span>
           </Tooltip>
         );
       },
