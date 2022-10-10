@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import CustomMenu from 'components/menu';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
-import { useAxios } from 'services/hooks/useAxios';
+import { useAxios } from 'utils/useAxios';
 import Loading from 'components/atoms/loading';
 import { Button, Grid, Stack, Typography } from '@mui/material';
 import { Add } from '@mui/icons-material';

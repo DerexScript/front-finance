@@ -18,7 +18,7 @@ import {
 import { DeleteOutlined, Edit, Save, Close, Add } from '@mui/icons-material';
 import { Button, Grid, Stack } from '@mui/material';
 import { randomId } from '@mui/x-data-grid-generator';
-import { useAxios } from 'services/hooks/useAxios';
+import { useAxios } from 'utils/useAxios';
 import { toast } from 'react-toastify';
 import { useAuth } from 'context/AuthProvider/useAuth';
 import { useConfirm } from 'material-ui-confirm';
@@ -133,14 +133,14 @@ const Role = (): JSX.Element => {
   }, []);
 
   const columns: GridColumns = [
-    { field: 'name', headerName: 'Name', minWidth: 110, flex: 1, editable: true },
-    { field: 'description', headerName: 'Description', minWidth: 110, flex: 1, editable: true },
-    { field: 'role', headerName: 'Role', minWidth: 110, flex: 1, editable: true },
+    { field: 'name', headerName: 'Name', flex: 1, editable: true },
+    { field: 'description', headerName: 'Description', flex: 1, editable: true },
+    { field: 'role', headerName: 'Role', flex: 1, editable: true },
     {
       field: 'actions',
       type: 'actions',
       headerName: 'Actions',
-      minWidth: 110,
+      sortable: false,
       flex: 1,
       cellClassName: 'actions',
       getActions: ({ id }): React.ReactElement<GridActionsCellItemProps, string>[] => {

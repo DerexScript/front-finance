@@ -3,7 +3,7 @@ import CustomMenu from 'components/menu';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import { Typography, Button, Snackbar, IconButton, Grid } from '@mui/material';
-import { useAxios } from 'services/hooks/useAxios';
+import { useAxios } from 'utils/useAxios';
 import CloseIcon from '@mui/icons-material/Close';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';

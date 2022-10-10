@@ -2,7 +2,7 @@ import React, { FormEvent, useEffect, useState } from 'react';
 import CustomMenu from 'components/menu';
 import { Box, Button, Grid, TextField, Typography } from '@mui/material';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useAxios } from 'services/hooks/useAxios';
+import { useAxios } from 'utils/useAxios';
 import { toast } from 'react-toastify';
 import { useAuth } from 'context/AuthProvider/useAuth';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
