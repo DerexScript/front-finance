@@ -56,9 +56,11 @@ const Role = (): JSX.Element => {
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
   const [rows, setRows] = useState<readonly GridValidRowModel[]>([]);
   const [pageSize, setPageSize] = useState(5);
-  const [page, setPage] = React.useState(999);
+  const [page, setPage] = useState(999);
   const [tableLoad, setTableLoad] = useState<boolean>(true);
   const [statusButtons, setStatusButtons] = useState<boolean>(true);
+  const [openTooltip, setOpenTooltip] = useState<{ id: number; state: boolean }[]>();
+
   const auth = useAuth();
   const confirm = useConfirm();
 
@@ -171,9 +173,31 @@ const Role = (): JSX.Element => {
       flex: 1,
       editable: true,
       renderCell: (params: GridRenderCellParams): JSX.Element => {
+        const handleTooltipClose = (): void => {
+          setOpenTooltip(openTooltip?.filter(x => x.id !== params.row.id));
+        };
+
+        const handleTooltipOpen = (): void => {
+          const too = [{ id: params.row.id as number, state: true }];
+          setOpenTooltip(too as { id: number; state: true }[]);
+        };
+
+        const handleTooltipIsOpen = (): boolean => {
+          const isOPen = openTooltip?.find(x => x.id === params.row.id);
+          return isOPen !== undefined;
+        };
         return (
-          <Tooltip title={params.row.role} arrow TransitionComponent={Zoom}>
-            <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+          <Tooltip
+            open={handleTooltipIsOpen()}
+            onClose={handleTooltipClose}
+            title={params.row.role}
+            arrow
+            TransitionComponent={Zoom}
+          >
+            <span
+              onClick={handleTooltipOpen}
+              style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
+            >
               {params.row.role}
             </span>
           </Tooltip>
