@@ -153,6 +153,7 @@ const Role = (): JSX.Element => {
       headerName: 'Name',
       flex: 1,
       editable: true,
+      description: 'Nome visivel do seu papel',
       renderCell: (params: GridRenderCellParams): JSX.Element => {
         return (
           <Tooltip
@@ -182,6 +183,7 @@ const Role = (): JSX.Element => {
       headerName: 'Description',
       flex: 1,
       editable: true,
+      description: 'Uma descrição curta para seu papel',
       renderCell: (params: GridRenderCellParams): JSX.Element => {
         return (
           <Tooltip
@@ -211,6 +213,7 @@ const Role = (): JSX.Element => {
       headerName: 'Role',
       flex: 1,
       editable: true,
+      description: 'O nome do seu papel',
       renderCell: (params: GridRenderCellParams): JSX.Element => {
         return (
           <Tooltip
@@ -241,7 +244,7 @@ const Role = (): JSX.Element => {
       headerName: 'Actions',
       sortable: false,
       flex: 1,
-      cellClassName: 'actions',
+      description: 'Edite e exclua papeis',
       getActions: ({ id }): React.ReactElement<GridActionsCellItemProps, string>[] => {
         const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
         if (isInEditMode) {

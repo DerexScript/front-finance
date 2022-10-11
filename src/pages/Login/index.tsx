@@ -31,7 +31,11 @@ function Copyright(props: { sx: { mt: number } }): JSX.Element {
   );
 }
 
-const theme = createTheme();
+const theme = createTheme({
+  palette: {
+    mode: 'dark',
+  },
+});
 
 function Login(): JSX.Element {
   const navigate = useNavigate();
