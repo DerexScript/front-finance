@@ -87,7 +87,7 @@ function CustomMenu(): JSX.Element {
       </div>
 
       <Box sx={{ flexGrow: 1 }}>
-        <AppBar position='static' sx={{ backgroundColor: '#00182C' }}>
+        <AppBar position='static'>
           <Toolbar>
             <IconButton
               size='large'
