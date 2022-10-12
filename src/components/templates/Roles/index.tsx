@@ -16,7 +16,14 @@ import { useAuth } from 'context/AuthProvider/useAuth';
 import EditToolbar from '../../organisms/EditToolbar';
 import roleCollumns from 'pages/Dashboard/Role/config/roleCollumns';
 
-const Role = (): JSX.Element => {
+const Role = ({
+  ...props
+}: {
+  children?: JSX.Element;
+  rows: readonly GridValidRowModel[];
+  setRows: React.Dispatch<React.SetStateAction<readonly GridValidRowModel[]>>;
+  loading: boolean;
+}): JSX.Element => {
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
   const [rows, setRows] = useState<readonly GridValidRowModel[]>([]);
   const [pageSize, setPageSize] = useState(5);
@@ -27,26 +34,12 @@ const Role = (): JSX.Element => {
   const collumns = roleCollumns({ rowModesModel, setRowModesModel, rows, setRows, statusButtons, setStatusButtons });
 
   useEffect(() => {
-    (async (): Promise<void> => {
-      const { response, error, axiosLoading } = await useAxios({ url: `role` });
-      if (response) {
-        setRows(response.data);
-        setStatusButtons(false);
-      } else {
-        if (error?.data == 'Unauthorized.' && error?.status == 401) {
-          toast.error('Sessão do usuario expirada, faça login novamente!', {
-            onClose: () => {
-              auth.logout();
-            },
-          });
-        }
-        if (error?.status == 0) {
-          toast.error('Erro ao obter Roles');
-        }
-      }
-      setTableLoad(axiosLoading);
-    })();
-  }, []);
+    if (!props.loading) {
+      setRows(props.rows);
+      setStatusButtons(props.loading);
+      setTableLoad(props.loading);
+    }
+  }, [props.loading]);
 
   const handleRowEditStart = (params: GridRowParams, event: MuiEvent<React.SyntheticEvent>): void => {
     event.defaultMuiPrevented = true;
@@ -102,8 +95,6 @@ const Role = (): JSX.Element => {
             rows={rows}
             density='compact'
             columns={collumns}
-            // pageSize={5}
-            //rowsPerPageOptions={[5]}
             autoHeight
             pageSize={pageSize}
             onPageSizeChange={(newPageSize): void => setPageSize(newPageSize)}
