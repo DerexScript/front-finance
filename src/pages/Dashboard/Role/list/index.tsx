@@ -7,6 +7,7 @@ import editToolbar from 'pages/Dashboard/Role/config/editToolbar';
 import { useAxios } from 'utils/useAxios';
 import { toast } from 'react-toastify';
 import { useAuth } from 'context/AuthProvider/useAuth';
+import processRowUpdate from 'pages/Dashboard/Role/config/processRowUpdate';
 
 const Roles = (): JSX.Element => {
   const [rows, setRows] = useState<readonly GridValidRowModel[]>([]);
@@ -59,6 +60,8 @@ const Roles = (): JSX.Element => {
           setStatusButtons={setStatusButtons}
           collumns={collumns}
           editToolbar={editToolbar}
+          processRowUpdate={processRowUpdate}
+          auth={auth}
         />
       )}
     </>

@@ -10,12 +10,11 @@ import {
   MuiEvent,
 } from '@mui/x-data-grid';
 import { Grid, Stack } from '@mui/material';
-import { useAxios } from 'utils/useAxios';
-import { toast } from 'react-toastify';
 import IEditToolbar from 'pages/Dashboard/Role/config/IEditToolbar';
+import IProcessRowUpdate from 'pages/Dashboard/Role/config/IProcessRowUpdate';
+import { IContext } from 'context/AuthProvider/type';
 
 const TableMUI = (props: {
-  children?: JSX.Element;
   rows: readonly GridValidRowModel[];
   setRows: React.Dispatch<React.SetStateAction<readonly GridValidRowModel[]>>;
   rowModesModel: GridRowModesModel;
@@ -30,54 +29,14 @@ const TableMUI = (props: {
   setStatusButtons: React.Dispatch<React.SetStateAction<boolean>>;
   collumns: GridColumns;
   editToolbar({ ...props }: IEditToolbar): JSX.Element;
+  processRowUpdate: ({ ...props }: IProcessRowUpdate) => Promise<GridRowModel>;
+  auth: IContext;
 }): JSX.Element => {
   const handleRowEditStart = (params: GridRowParams, event: MuiEvent<React.SyntheticEvent>): void => {
     event.defaultMuiPrevented = true;
   };
   const handleRowEditStop: GridEventListener<'rowEditStop'> = (params, event): void => {
     event.defaultMuiPrevented = true;
-  };
-  const processRowUpdate = async (newRow: GridRowModel): Promise<GridRowModel> => {
-    const updatedRow = { ...newRow, isNew: false };
-    if (!newRow.isNew) {
-      const { response, error } = await useAxios({ method: 'put', url: `role/${newRow.id}`, data: newRow });
-      if (response) {
-        props.setRows(props.rows?.map(row => (row.id === newRow.id ? updatedRow : row)));
-      } else {
-        if (error?.data == 'Unauthorized.' && error?.status == 401) {
-          console.log('sessão do usuario expirada, faça login novamente!');
-          /*
-          toast.error('Sessão do usuario expirada, faça login novamente!', {
-            onClose: () => {
-              auth.logout();
-            },
-          });
-          */
-        }
-      }
-    } else {
-      const { response, error } = await useAxios({ method: 'post', url: `role`, data: newRow });
-      if (response) {
-        const formatedRow = { ...updatedRow, id: response.data.id };
-        props.setRows(props.rows?.map(row => (row.id === newRow.id ? formatedRow : row)));
-      } else {
-        if (error?.data == 'Unauthorized.' && error?.status == 401) {
-          console.log('sessão do usuario expirada, faça login novamente!');
-          /*
-          toast.error('Sessão do usuario expirada, faça login novamente!', {
-            onClose: () => {
-              auth.logout();
-            },
-          });
-          */
-        }
-        if (error?.status !== 201) {
-          toast.error('Erro ao inserir nova role');
-          props.setRows(props.rows?.filter(row => row.id !== newRow.id));
-        }
-      }
-    }
-    return updatedRow;
   };
 
   return (
@@ -100,7 +59,10 @@ const TableMUI = (props: {
             onRowModesModelChange={(newModel): void => props.setRowModesModel(newModel)}
             onRowEditStart={handleRowEditStart}
             onRowEditStop={handleRowEditStop}
-            processRowUpdate={processRowUpdate}
+            processRowUpdate={(newRow: GridRowModel): Promise<GridRowModel> =>
+              props.processRowUpdate({ newRow, props })
+            }
+            onProcessRowUpdateError={console.log}
             components={{
               NoRowsOverlay: () => (
                 <Stack height='100%' alignItems='center' justifyContent='center'>
