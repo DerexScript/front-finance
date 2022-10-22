@@ -1,6 +1,6 @@
 {
     "editor.tabSize": 2,
-    "editor.defaultFormatter": "rvest.vs-code-prettier-eslint",
+    // "editor.defaultFormatter": "rvest.vs-code-prettier-eslint",
     "javascript.updateImportsOnFileMove.enabled": "always",
     "editor.formatOnPaste": false, // required 
     "editor.formatOnType": false, // required
@@ -26,6 +26,9 @@
         "**/.DS_Store": true
     },
     "[typescriptreact]": {
-        "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
     }
 }
