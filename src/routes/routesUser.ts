@@ -1,11 +1,11 @@
-import AboutList from 'pages/Dashboard/About/list';
+import UserList from 'pages/Dashboard/User/list';
 import IRoutes from './IRoutes';
 
 const routesAbout: IRoutes[] = [
   {
-    path: '/dashboard/User',
-    protected: false,
-    component: AboutList,
+    path: '/dashboard/Users',
+    protected: true,
+    component: UserList,
     visibleInDisplay: true,
     displayName: 'Usuários',
   },

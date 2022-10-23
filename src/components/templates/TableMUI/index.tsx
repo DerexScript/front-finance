@@ -51,7 +51,10 @@ const TableMUI = (props: {
             columns={props.collumns}
             autoHeight
             pageSize={props.pageSize}
-            onPageSizeChange={(newPageSize): void => props.setPageSize(newPageSize)}
+            onPageSizeChange={(newPageSize): void => {
+              props.setPage(props.page - 1);
+              props.setPageSize(newPageSize);
+            }}
             rowsPerPageOptions={[5, 10, 15]}
             pagination
             editMode='row'

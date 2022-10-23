@@ -14,6 +14,7 @@ function editToolbar({ ...props }: IEditToolbar): JSX.Element {
       ...oldModel,
       [id]: { mode: GridRowModes.Edit, fieldToFocus: 'name' },
     }));
+    console.log('asd');
     setTimeout(() => {
       setPage(999);
     }, 200);
