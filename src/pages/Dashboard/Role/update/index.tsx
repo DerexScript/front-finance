@@ -1,5 +1,5 @@
 import React, { FormEvent, useEffect, useState } from 'react';
-import CustomMenu from 'components/menu';
+import CustomMenu from 'components/dashMenu';
 import { Box, Button, Grid, TextField, Typography } from '@mui/material';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAxios } from 'utils/useAxios';

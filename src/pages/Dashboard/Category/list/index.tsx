@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import TableMUI from 'components/templates/TableMUI';
-import CustomMenu from 'components/menu';
+import CustomMenu from 'components/dashMenu';
 import { GridRowModesModel, GridValidRowModel } from '@mui/x-data-grid';
 import categoryCollumns from 'pages/Dashboard/Category/config/categoryCollumns';
 import editToolbar from 'pages/Dashboard/Category/config/editToolbar';
@@ -8,6 +8,7 @@ import { useAxios } from 'utils/useAxios';
 import { toast } from 'react-toastify';
 import { useAuth } from 'context/AuthProvider/useAuth';
 import processRowUpdate from 'pages/Dashboard/Category/config/processRowUpdate';
+import Loading from 'components/atoms/loading';
 
 const Category = (): JSX.Element => {
   const [rows, setRows] = useState<readonly GridValidRowModel[]>([]);
@@ -51,7 +52,7 @@ const Category = (): JSX.Element => {
   return (
     <>
       <CustomMenu />
-      {!tableLoad && (
+      {!tableLoad ? (
         <TableMUI
           rows={rows}
           setRows={setRows}
@@ -70,6 +71,8 @@ const Category = (): JSX.Element => {
           processRowUpdate={processRowUpdate}
           auth={auth}
         />
+      ) : (
+        <Loading />
       )}
     </>
   );

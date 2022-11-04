@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -40,8 +40,8 @@ const theme = createTheme({
 function Login(): JSX.Element {
   const navigate = useNavigate();
   const auth = useAuth();
-  const [open, setOpen] = React.useState(false);
-  const [loading, setLoading] = React.useState<boolean>(true);
+  const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     if (auth.token) {

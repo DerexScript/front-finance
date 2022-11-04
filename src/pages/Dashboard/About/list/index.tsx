@@ -1,5 +1,5 @@
 import React from 'react';
-import CustomMenu from 'components/menu';
+import CustomMenu from 'components/dashMenu';
 import { Box } from '@mui/material';
 
 const About = (): JSX.Element => {

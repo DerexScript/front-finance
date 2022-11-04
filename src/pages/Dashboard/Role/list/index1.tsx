@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import CustomMenu from 'components/menu';
+import CustomMenu from 'components/dashMenu';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { useAxios } from 'utils/useAxios';
 import Loading from 'components/atoms/loading';

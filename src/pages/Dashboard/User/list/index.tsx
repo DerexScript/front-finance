@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import TableMUI from 'components/templates/TableMUI';
-import CustomMenu from 'components/menu';
+import CustomMenu from 'components/dashMenu';
 import { GridRowModesModel, GridValidRowModel } from '@mui/x-data-grid';
 import userCollumns from 'pages/Dashboard/User/config/userCollumns';
 import editToolbar from 'pages/Dashboard/User/config/editToolbar';

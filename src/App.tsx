@@ -7,9 +7,11 @@ import { Box, createTheme, ThemeProvider } from '@mui/material';
 const darkTheme = createTheme({
   palette: {
     mode: 'dark',
+    background: {
+      default: 'rgb(24, 26, 27)',
+    },
   },
 });
-
 function App(): JSX.Element {
   return (
     <ThemeProvider theme={darkTheme}>
