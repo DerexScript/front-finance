@@ -1,23 +1,27 @@
-import routesAbout from './routesAbout';
-import routesCompany from './dashboard/routesCompany';
-import routesDashboardHome from './dashboard/routesDashboardHome';
-import routesUser from './routesUser';
-import routesCategory from './routesCategory';
 import routesHome from './routesHome';
+import routesRelease from './routesRelease';
+import routesDashboardHome from './dashboard/routesDashboardHome';
 import routesLogout from './routesLogout';
 import routesDashboardRole from './dashboard/routesRole';
-import routesEntry from './routesEntry';
+import routesUser from './routesUser';
+import routesCompany from './dashboard/routesCompany';
+import routesCategory from './routesCategory';
+import routesReleaseGroup from './dashboard/routesReleaseGroup';
+import routesDashboardRelease from './dashboard/routesRelease';
+import routesAbout from './routesAbout';
 
 const routes = [
   ...routesHome,
-  ...routesDashboardHome,
-  ...routesAbout,
-  ...routesCompany,
-  ...routesUser,
-  ...routesCategory,
+  ...routesRelease,
   ...routesLogout,
+  ...routesDashboardHome,
   ...routesDashboardRole,
-  ...routesEntry,
+  ...routesUser,
+  ...routesCompany,
+  ...routesCategory,
+  ...routesReleaseGroup,
+  ...routesDashboardRelease,
+  ...routesAbout,
 ];
 
 export default routes;

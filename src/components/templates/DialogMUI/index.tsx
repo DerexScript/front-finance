@@ -9,6 +9,8 @@ type TDialog = {
   entityID: number;
   option1: string;
   option2: string;
+  iconStart: React.ReactNode;
+  variant: 'text' | 'outlined' | 'contained' | undefined;
 };
 
 const DialogMui = ({ ...props }: TDialog): JSX.Element => {
@@ -16,14 +18,15 @@ const DialogMui = ({ ...props }: TDialog): JSX.Element => {
   return (
     <>
       <Button
+        startIcon={props.iconStart}
         size='small'
-        variant='outlined'
+        variant={props.variant}
         color='error'
         onClick={(): void => {
           setOpenDialog(true);
         }}
       >
-        {!props.buttonValue ? 'Excluir' : props.buttonValue}
+        {props.buttonValue}
       </Button>
       <Dialog
         open={openDialog}

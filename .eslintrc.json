@@ -63,9 +63,12 @@
         ],
         "indent": [
             "error",
-            2
+            2,
+            {
+                "SwitchCase": 1,
+                "ignoredNodes": ["ConditionalExpression"]
+            }
         ],
-        
         "quotes": [
             "error",
             "single",
@@ -77,5 +80,6 @@
             "error",
             "always"
         ]
+        
     }
 }

@@ -1,8 +1,8 @@
-export interface IEntry {
+export interface IRelease {
   id: number;
   name: string;
   description: string;
   status: number;
-  entry_id: number | null;
+  release_id: number | null;
   company_id: number | null;
 }

@@ -2,6 +2,7 @@ import Loading from 'components/atoms/loading2';
 import React, { createContext, useEffect, useState } from 'react';
 import { IAuthProvider, IContext, IUser } from './type';
 import { getUserLocalStorage, LoginRequest, setUserLocalStorage } from './util';
+import { Buffer } from 'buffer';
 
 export const AuthContext = createContext<IContext>({} as IContext);
 
@@ -12,7 +13,17 @@ export const AuthProvider = ({ children }: IAuthProvider): JSX.Element => {
   useEffect(() => {
     const user = getUserLocalStorage();
     if (user) {
-      setUser(user);
+      const payloadToken = user.token.split('.')[1].replace(/[-_]/g, '');
+      const base64Payload = Buffer.from(payloadToken, 'base64').toString();
+      const jsonPayload = JSON.parse(base64Payload);
+      const tokenExp = jsonPayload.exp;
+      const dateExp = new Date(tokenExp * 1000);
+      const dateNow = new Date();
+      if (dateNow.getTime() < dateExp.getTime()) {
+        setUser(user);
+      } else {
+        logout();
+      }
     }
     setLoading(false);
   }, []);

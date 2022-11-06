@@ -31,6 +31,9 @@ const Home = (): JSX.Element => {
             borderRadius: 1,
             alignItems: 'center',
             justifyContent: 'center',
+            margin: '0 auto',
+            height: '100%',
+            backgroundColor: 'rgb(24, 26, 27)',
           }}
         >
           {companies.length > 0 &&
@@ -42,7 +45,13 @@ const Home = (): JSX.Element => {
                 sm={5}
                 md={2}
                 lg={2}
-                sx={{ marginTop: '10px', marginRight: '10px', minWidth: 200 }}
+                sx={{
+                  minWidth: 200,
+                  display: 'flex',
+                  justifyContent: 'center',
+                  marginTop: '5px',
+                  marginRight: '10px',
+                }}
               >
                 <CompanyCard {...company} />
               </Grid>

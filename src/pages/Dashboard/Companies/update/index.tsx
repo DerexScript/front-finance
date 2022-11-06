@@ -63,7 +63,6 @@ const updateCompany = (): JSX.Element => {
     formData.append('description', description);
     formData.append('_method', 'PUT');
     if (image !== null) {
-      console.log(image);
       formData.append('image', image as File, image?.name as string);
     }
     const { response } = await useAxios({
@@ -147,6 +146,7 @@ const updateCompany = (): JSX.Element => {
           <input
             id='inputImage'
             type='file'
+            accept='.png,.jpg,.jpeg'
             onChange={(evt): void => {
               handleUpdateImage(evt.target.files as FileList);
             }}

@@ -31,7 +31,7 @@ function App(): JSX.Element {
         <Box
           sx={{
             width: '100%',
-            height: 'calc(100vh)',
+            height: '100vh',
             bgcolor: 'background.default',
             color: 'text.primary',
           }}

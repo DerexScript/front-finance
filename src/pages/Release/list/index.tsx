@@ -2,16 +2,16 @@ import React, { useEffect, useState } from 'react';
 import { Box, Grid } from '@mui/material';
 import { useAxios } from 'utils/useAxios';
 import SiteMenu from 'components/siteMenu';
-import { IEntry } from './IEntry';
+import { IRelease } from './IRelease';
 
-const Entry = (): JSX.Element => {
-  const [entries, setEntries] = useState<IEntry[]>([]);
+const Release = (): JSX.Element => {
+  const [releases, setReleases] = useState<IRelease[]>([]);
 
   useEffect(() => {
     void (async (): Promise<void> => {
       const { response } = await useAxios({ method: 'get', url: 'entry' });
       if (response) {
-        setEntries(response.data);
+        setReleases(response.data);
       }
     })();
   }, []);
@@ -32,10 +32,10 @@ const Entry = (): JSX.Element => {
             justifyContent: 'center',
           }}
         >
-          {entries.length > 0 &&
-            entries.map(entry => (
+          {releases.length > 0 &&
+            releases.map(release => (
               <Grid
-                key={entry.id}
+                key={release.id}
                 item
                 xs={12}
                 sm={5}
@@ -49,4 +49,4 @@ const Entry = (): JSX.Element => {
     </>
   );
 };
-export default Entry;
+export default Release;

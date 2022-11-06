@@ -33,19 +33,23 @@ const CreateCompany = (): JSX.Element => {
   }
 
   const handleProductRegister = async (): Promise<void> => {
-    const formData = new FormData();
-    formData.append('image', companyFile[0], companyFile[0].name);
-    formData.append('name', companyName);
-    formData.append('description', companyDescription);
-    const { response } = await useAxios({
-      url: 'company',
-      method: 'POST',
-      data: formData,
-    });
-    if (response) {
-      toast.success('Empresa adicionada com sucesso!');
-      setShowImage('none');
-      navigate('/dashboard/Company');
+    if (companyName.length && companyDescription.length && companyFile.length) {
+      const formData = new FormData();
+      formData.append('image', companyFile[0], companyFile[0].name);
+      formData.append('name', companyName);
+      formData.append('description', companyDescription);
+      const { response } = await useAxios({
+        url: 'company',
+        method: 'POST',
+        data: formData,
+      });
+      if (response) {
+        toast.success('Empresa adicionada com sucesso!');
+        setShowImage('none');
+        navigate('/dashboard/Company');
+      }
+    } else {
+      toast.error('Você precisa preencher todos os campos do formulario');
     }
   };
 
@@ -80,6 +84,7 @@ const CreateCompany = (): JSX.Element => {
                 value={companyName}
                 size='small'
                 sx={{ marginTop: '10px' }}
+                required={true}
               />
               <TextField
                 label='Descrição'
@@ -87,6 +92,7 @@ const CreateCompany = (): JSX.Element => {
                 value={companyDescription}
                 size='small'
                 sx={{ marginTop: '10px' }}
+                required={true}
               />
             </div>
             <div>
@@ -97,7 +103,12 @@ const CreateCompany = (): JSX.Element => {
                 sx={{ marginTop: '10px', width: '100%' }}
               >
                 Enviar Imagem
-                <input type='file' onChange={(evt): void => showImageBase64(evt.target.files as FileList)} hidden />
+                <input
+                  type='file'
+                  onChange={(evt): void => showImageBase64(evt.target.files as FileList)}
+                  required={true}
+                  hidden
+                />
               </Button>
             </div>
             <div>
