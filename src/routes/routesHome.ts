@@ -5,9 +5,10 @@ const routesDashboardHome: IRoutes[] = [
   {
     path: '/Home',
     component: Home,
-    protected: true,
-    visibleInDisplay: false,
+    protected: false,
+    visibleInDisplay: true,
     displayName: 'Home',
+    locale: 'site',
   },
   {
     path: '/',
@@ -15,6 +16,7 @@ const routesDashboardHome: IRoutes[] = [
     protected: true,
     visibleInDisplay: false,
     displayName: 'Home',
+    locale: 'site',
   },
 ];
 

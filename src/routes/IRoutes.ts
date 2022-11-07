@@ -3,5 +3,6 @@ export default interface IRoutes {
   visibleInDisplay?: boolean;
   displayName?: string;
   protected?: boolean;
+  locale?: 'site' | 'dashboard';
   component: () => JSX.Element;
 }

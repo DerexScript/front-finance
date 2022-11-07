@@ -78,7 +78,7 @@ function DashMenu(): JSX.Element {
                 </ListItemButton>
               </ListItem>
               {routes
-                .filter(route => route.visibleInDisplay)
+                .filter(route => route.visibleInDisplay && route.locale !== 'site')
                 .map(route => (
                   <ListItem
                     key={route.displayName}

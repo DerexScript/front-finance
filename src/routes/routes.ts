@@ -1,5 +1,4 @@
 import routesHome from './routesHome';
-import routesRelease from './routesRelease';
 import routesDashboardHome from './dashboard/routesDashboardHome';
 import routesLogout from './routesLogout';
 import routesDashboardRole from './dashboard/routesRole';
@@ -9,10 +8,15 @@ import routesCategory from './routesCategory';
 import routesReleaseGroup from './dashboard/routesReleaseGroup';
 import routesDashboardRelease from './dashboard/routesRelease';
 import routesAbout from './routesAbout';
+import routesReleaseGroupSite from './routesReleaseGroup';
+import routesCompanyList from './routesCompany';
+import routesReleaseSite from './routesRelease';
 
 const routes = [
   ...routesHome,
-  ...routesRelease,
+  ...routesReleaseSite,
+  ...routesCompanyList,
+  ...routesReleaseGroupSite,
   ...routesLogout,
   ...routesDashboardHome,
   ...routesDashboardRole,

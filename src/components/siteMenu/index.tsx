@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { AppBar, Link, Box, Toolbar, IconButton, Typography } from '@mui/material';
 import { Menu, Container, Avatar, Button, Tooltip, MenuItem } from '@mui/material';
 import { Menu as MenuIcon, Adb as AdbIcon } from '@mui/icons-material';
+import routes from 'routes/routes';
+import { useNavigate } from 'react-router-dom';
 
-const pages = ['Home'];
 const pagesRoutes = ['/'];
 const settings = ['Dashboard', 'Sair'];
 const settingsRoutes = ['/dashboard/', '/logout'];
@@ -11,6 +12,7 @@ const settingsRoutes = ['/dashboard/', '/logout'];
 const SiteMenu = (): JSX.Element => {
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
+  const navigate = useNavigate();
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>): void => {
     setAnchorElNav(event.currentTarget);
@@ -77,14 +79,23 @@ const SiteMenu = (): JSX.Element => {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              {pages.length &&
-                pages.map((page, key) => (
-                  <Link key={key} href={pagesRoutes[key]} underline='none'>
-                    <MenuItem onClick={handleCloseNavMenu}>
-                      <Typography textAlign='center'>{page}</Typography>
-                    </MenuItem>
-                  </Link>
-                ))}
+              {routes.length &&
+                routes
+                  .filter(route => route.visibleInDisplay && route.locale === 'site')
+                  .map((page, key) => (
+                    <Link
+                      key={key}
+                      href={pagesRoutes[key]}
+                      underline='none'
+                      onClick={(): void => {
+                        navigate(page.path);
+                      }}
+                    >
+                      <MenuItem onClick={handleCloseNavMenu}>
+                        <Typography textAlign='center'>{page.displayName}</Typography>
+                      </MenuItem>
+                    </Link>
+                  ))}
             </Menu>
           </Box>
           <AdbIcon sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }} />
@@ -107,12 +118,20 @@ const SiteMenu = (): JSX.Element => {
             LOGO
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.length &&
-              pages.map(page => (
-                <Button key={page} onClick={handleCloseNavMenu} sx={{ my: 2, color: 'white', display: 'block' }}>
-                  {page}
-                </Button>
-              ))}
+            {routes.length &&
+              routes
+                .filter(route => route.visibleInDisplay && route.locale === 'site')
+                .map(page => (
+                  <Button
+                    key={page.path}
+                    onClick={(): void => {
+                      navigate(page.path);
+                    }}
+                    sx={{ my: 2, color: 'white', display: 'block' }}
+                  >
+                    {page.displayName}
+                  </Button>
+                ))}
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>

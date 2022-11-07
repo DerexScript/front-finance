@@ -112,7 +112,6 @@ const updateCompany = (): JSX.Element => {
               id='outlined-basic'
               name='name'
               label='Nome'
-              variant='outlined'
               onChange={(evt: ChangeEvent<HTMLInputElement>): void => setName(evt.target.value)}
             />
           </Grid>
@@ -123,7 +122,6 @@ const updateCompany = (): JSX.Element => {
               id='outlined-basic'
               name='description'
               label='Descrição'
-              variant='outlined'
               onChange={(evt: ChangeEvent<HTMLInputElement>): void => setDescription(evt.target.value)}
             />
           </Grid>
