@@ -1,50 +1,62 @@
-import React, { useEffect, useState } from 'react';
-import {
-  Autocomplete,
-  Button,
-  ButtonGroup,
-  CircularProgress,
-  Grid,
-  Stack,
-  Switch,
-  TextField,
-  TextFieldProps,
-  Typography,
-} from '@mui/material';
-import { Container } from '@mui/system';
+import { Add } from '@mui/icons-material';
+import { Box, Button, Container, Grid } from '@mui/material';
 import SiteMenu from 'components/siteMenu';
-import { Add as AddIcon, CloudUpload as CloudUploadIcon } from '@mui/icons-material';
-import { LocalizationProvider, MobileDatePicker } from '@mui/x-date-pickers';
-import dayjs, { Dayjs } from 'dayjs';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import 'dayjs/locale/pt-br';
+import { useAuth } from 'context/AuthProvider/useAuth';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { useAxios } from 'utils/useAxios';
-
-type TCategory = {
-  id: number;
-  name: string;
-  description: string;
-};
+import { ICategory } from './ICategory';
+import { IRelease } from './IRelease';
+import Release from './release';
 
 const Releases = (): JSX.Element => {
-  const [insertDate, setInsertDate] = useState<Dayjs | null>(dayjs(new Date().toISOString()));
-  const [categories, setCategories] = useState<TCategory[]>([]);
-  const [category, setCategory] = useState<TCategory>();
-  const [openCategory, setOpenCategory] = useState<boolean>(false);
-  const loadingCategory = openCategory && category?.name.length === 0;
+  const [category, setCategory] = useState<ICategory[]>([]);
+  const [releases, setReleases] = useState<IRelease[]>([]);
+  const [releasesE, setReleasesE] = useState<JSX.Element[]>([]);
+  const [releasesEE, setReleasesEE] = useState<JSX.Element[]>([]);
+  const auth = useAuth();
+  const { releaseGroupID } = useParams();
 
   useEffect(() => {
+    const getCategory = useAxios({ url: 'category' });
+    const getReleases = useAxios({ url: `release-group/${releaseGroupID}` });
+    const categoryDefault = {
+      id: 0,
+      name: 'Escolha uma empresa',
+      description: 'Escolha uma empresa',
+    };
     (async (): Promise<void> => {
-      const getCategory = useAxios({ url: 'category' });
-      const [{ response: categoryResponse }] = await Promise.all([getCategory]);
+      const [
+        { response: categoryResponse, error: categoryError },
+        { response: releasesGroupsResponse, error: releasesGroupsError },
+      ] = await Promise.all([getCategory, getReleases]);
       if (categoryResponse) {
-        const categoryDefault = {
-          id: 0,
-          name: 'Escolha uma categoria',
-          description: 'Escolha uma categoria',
-        };
-        setCategories([categoryDefault, ...categoryResponse.data]);
-        setCategory(categoryDefault);
+        setCategory([categoryDefault, ...categoryResponse.data]);
+      } else {
+        if (categoryError != null && categoryError?.data === 'Unauthorized.') {
+          auth.logout();
+        }
+      }
+      if (releasesGroupsResponse) {
+        setReleases(releasesGroupsResponse.data.releases);
+        const tt = releasesGroupsResponse.data.releases
+          .sort()
+          .reverse()
+          .map((release: IRelease) => {
+            return (
+              <Release
+                categories={[categoryDefault, ...(categoryResponse?.data as ICategory[])]}
+                release={release}
+                key={release.id}
+              />
+            );
+          });
+
+        setReleasesEE([...releasesEE, ...tt]);
+      } else {
+        if (releasesGroupsError != null && releasesGroupsError?.data === 'Unauthorized.') {
+          auth.logout();
+        }
       }
     })();
   }, []);
@@ -52,119 +64,43 @@ const Releases = (): JSX.Element => {
   return (
     <>
       <SiteMenu />
-      <Container maxWidth='lg' sx={{ marginTop: 2 }}>
-        <Grid
-          container
-          maxWidth='100%'
+      <Grid container direction='row' sx={{ width: '100%' }} marginTop={1}>
+        <Box
           sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            padding: '5px',
-            textAlign: 'center',
-            border: '1px solid #ccc',
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'rgb(24, 26, 27)',
           }}
         >
-          <Grid item xs={12} md={12} sm={12} lg={12}>
-            {categories.length > 0 && (
-              <Autocomplete
-                id='categories'
-                size='small'
-                value={category}
-                onChange={(_, value): void => {
-                  setCategory(value as TCategory);
-                }}
-                onOpen={(): void => {
-                  setOpenCategory(true);
-                }}
-                onClose={(): void => {
-                  setOpenCategory(false);
-                }}
-                options={categories}
-                isOptionEqualToValue={(option, value): boolean => option.id === value.id}
-                getOptionLabel={(option): string => `${option.id} - ${option.name}`}
-                loading={loadingCategory}
-                renderInput={(params): React.ReactNode => (
-                  <TextField
-                    {...params}
-                    label='Categorias'
-                    sx={{ maxWidth: '80%', marginTop: '10px' }}
-                    InputProps={{
-                      ...params.InputProps,
-                      endAdornment: (
-                        <React.Fragment>
-                          {loadingCategory ? <CircularProgress color='inherit' /> : null}
-                          {params.InputProps.endAdornment}
-                        </React.Fragment>
-                      ),
-                    }}
-                  />
-                )}
-              />
-            )}
-            <TextField
-              id='description'
-              label='Descrição'
-              variant='standard'
-              sx={{ marginRight: '10px', marginTop: '10px' }}
-            />
-            <TextField id='value' label='Valor' variant='standard' sx={{ marginRight: '10px', marginTop: '10px' }} />
-            <Stack
-              direction='row'
-              sx={{ display: 'flex', justifyContent: 'center', margin: '10px' }}
-              alignItems='center'
+          <Container maxWidth='xl'>
+            <Box
+              width='100%'
+              sx={{
+                marginTop: 1,
+                marginBottom: 1,
+                textAlign: 'center',
+              }}
             >
-              <Typography>Saida</Typography>
-              <Switch id='status' size='small' defaultChecked />
-              <Typography>Entrada</Typography>
-            </Stack>
-            <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale='pt-br'>
-              <MobileDatePicker
-                showToolbar={true}
-                label='Data do lançamento'
-                inputFormat='DD/MM/YYYY HH:mm'
-                value={insertDate}
-                onChange={setInsertDate}
-                renderInput={(params: TextFieldProps): JSX.Element => <TextField {...params} />}
-              />
-            </LocalizationProvider>
-          </Grid>
-
-          <Button
-            id='voucher'
-            startIcon={<CloudUploadIcon />}
-            variant='outlined'
-            component='label'
-            sx={{ marginTop: '10px', width: '80%', alignSelf: 'center' }}
-          >
-            Enviar Comprovante
-            <input
-              type='file'
-              // onChange={(evt): void => showImageBase64(evt.target.files as FileList)}
-              required={true}
-              hidden
-            />
-          </Button>
-
-          <ButtonGroup variant='outlined' sx={{ alignSelf: 'center', marginTop: '5px' }} aria-label='Actions'>
-            <Button color='primary'>Salvar</Button>
-            <Button color='error'>Excluir</Button>
-          </ButtonGroup>
-        </Grid>
-        <Grid
-          container
-          maxWidth='100%'
-          sx={{
-            marginTop: '10px',
-            display: 'flex',
-            flexDirection: 'column',
-            textAlign: 'center',
-          }}
-        >
-          <Button variant='outlined' startIcon={<AddIcon />}>
-            Adicionar
-          </Button>
-        </Grid>
-      </Container>
+              <Button
+                variant='outlined'
+                sx={{ marginBottom: 1 }}
+                fullWidth
+                startIcon={<Add />}
+                onClick={(): void => {
+                  if (category.length) {
+                    const asd = [<Release categories={category} key={new Date().getTime()} />, ...releasesE];
+                    setReleasesE(asd);
+                  }
+                }}
+              >
+                Adicionar
+              </Button>
+            </Box>
+          </Container>
+          {releasesE}
+          {releasesEE}
+        </Box>
+      </Grid>
     </>
   );
 };

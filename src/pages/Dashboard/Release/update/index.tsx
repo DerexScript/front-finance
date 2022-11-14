@@ -51,7 +51,7 @@ const ReleaseUpdate = (): JSX.Element => {
 
   //entryGroups states
   const [releaseGroups, setReleasesGroups] = useState<IReleaseGroup[]>([]);
-  const [releaseGroup, setReleaseGrouop] = useState<IReleaseGroup | null>(null);
+  const [releaseGroup, setReleaseGroup] = useState<IReleaseGroup | null>(null);
   const [openReleasesGroups, setOpenReleasesGroups] = useState<boolean>(false);
   const loadingReleasesGroups = openReleasesGroups && releaseGroups.length === 0;
 
@@ -96,7 +96,7 @@ const ReleaseUpdate = (): JSX.Element => {
       if (releaseGroupResponse) {
         setReleasesGroups(releaseGroupResponse.data);
         if (releaseResponse) {
-          setReleaseGrouop(
+          setReleaseGroup(
             releaseGroupResponse.data.filter(
               (entry: IReleaseGroup) => entry.id === releaseResponse.data.release_group_id,
             )[0],
@@ -208,7 +208,7 @@ const ReleaseUpdate = (): JSX.Element => {
                   sx={{ marginTop: '10px' }}
                   value={releaseGroup}
                   onChange={(_, value): void => {
-                    setReleaseGrouop(value as IReleaseGroup);
+                    setReleaseGroup(value as IReleaseGroup);
                   }}
                   options={releaseGroups}
                   open={openReleasesGroups}

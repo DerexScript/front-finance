@@ -5,8 +5,8 @@ type TDialog = {
   title: string;
   contentText: string;
   buttonValue?: string;
-  setResultDialog: React.Dispatch<React.SetStateAction<number>>;
-  entityID: number;
+  setResultDialog?: React.Dispatch<React.SetStateAction<number>>;
+  entityID?: number;
   option1: string;
   option2: string;
   iconStart: React.ReactNode;
@@ -51,7 +51,9 @@ const DialogMui = ({ ...props }: TDialog): JSX.Element => {
           <Button
             autoFocus
             onClick={(): void => {
-              props.setResultDialog(props.entityID);
+              if (props.setResultDialog != undefined && props.entityID != undefined) {
+                props.setResultDialog(props.entityID);
+              }
               setOpenDialog(false);
             }}
           >
