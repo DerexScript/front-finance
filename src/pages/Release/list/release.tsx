@@ -87,13 +87,56 @@ const Release = ({ ...props }: TProps): JSX.Element | null => {
     }
   };
 
-  const handleEdit = (): void => {
+  const handleEdit = async (): Promise<void> => {
     if (state) {
       setButtonIcon(Save);
       setState(false);
     } else {
-      setButtonIcon(Edit);
-      setState(true);
+      if (
+        category.id &&
+        category.id !== 0 &&
+        description.length &&
+        value &&
+        releaseType.length
+        // imageFile.length &&
+        // /image/.test(imageFile[0].type)
+      ) {
+        const formData = new FormData();
+        formData.append('category_id', category.id.toString());
+        formData.append('description', description);
+        formData.append('value', value.toString());
+        formData.append('type', (releaseType === 'input').toString());
+        formData.append('insert_date', releaseDate?.format('YYYY/MM/DD HH:mm:ss') as string);
+        formData.append('release_group_id', releaseGroupID as string);
+        if (imageFile.length && /image/.test(imageFile[0].type)) {
+          formData.append('voucher', imageFile[0], imageFile[0].name);
+        }
+        formData.append('_method', 'PUT');
+        const { response } = await useAxios({ url: `release/${props.release?.id}`, method: 'post', data: formData });
+        if (response) {
+          toast.success('Lançamento editado com sucesso!');
+          setButtonIcon(Edit);
+          setState(true);
+        }
+      } else {
+        if (!category.id) {
+          toast.warning('Voce deve selecionar uma categoria');
+        } else if (category.id === 0) {
+          toast.warning('Voce deve selecionar uma categoria');
+        } else if (!description.length) {
+          toast.warning('Você deve informar uma descrição');
+        } else if (!value) {
+          toast.warning('Você deve informar um valor');
+        } else if (releaseType === undefined) {
+          toast.warning('Você deve informar se o lançamento é saida ou entrada');
+        } else if (imageFile.length === undefined) {
+          toast.warning('Você deve enviar um comprovante');
+        } else if (imageFile.length && !/image/.test(imageFile[0].type)) {
+          toast.warning('Você só pode enviar imagem como comprovante');
+        } else {
+          toast.warning('Preencha todos campos.');
+        }
+      }
     }
   };
 
@@ -293,7 +336,11 @@ const Release = ({ ...props }: TProps): JSX.Element | null => {
                 title='Deseja Excluir?'
                 setResultDialog={setStatus}
                 entityID={0}
-                contentText={`Tem certeza que deseja excluir o lançamento, ${props.release?.description}?`}
+                contentText={
+                  props.action === 'insert'
+                    ? 'Tem certeza que deseja excluir o lançamento'
+                    : `Tem certeza que deseja excluir o lançamento, ${props.release?.description}?`
+                }
                 option1='Cancelar'
                 option2='Excluir'
                 variant='text'

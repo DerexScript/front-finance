@@ -14,8 +14,8 @@ export const useAxios = async (config: AxiosRequestConfig): Promise<IAxiosRespon
 
   try {
     const axiosInstance = axios.create();
-    axiosInstance.defaults.baseURL = 'http://localhost:8000/api/v1/';
-    // axiosInstance.defaults.baseURL = 'https://api.finanies.tk/api/v1/';
+    // axiosInstance.defaults.baseURL = 'http://localhost:8000/api/v1/';
+    axiosInstance.defaults.baseURL = 'https://api.finanies.tk/api/v1/';
     axiosInstance.interceptors.request.use(
       (config: AxiosRequestConfig) => {
         config.headers !== undefined && (config.headers.Authorization = `Bearer ${getUserLocalStorage()?.token}`);

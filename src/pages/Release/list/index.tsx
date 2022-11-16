@@ -18,8 +18,6 @@ type TRelease = {
 
 const Releases = (): JSX.Element => {
   const [category, setCategory] = useState<ICategory[]>([]);
-  const [releases, setReleases] = useState<IRelease[]>([]);
-  const [releasesE, setReleasesE] = useState<JSX.Element[]>([]);
   const [releasesJSX, setReleasesJSX] = useState<TRelease[]>([]);
   const auth = useAuth();
   const { releaseGroupID } = useParams();
@@ -52,7 +50,6 @@ const Releases = (): JSX.Element => {
             release.state = true;
             return release;
           });
-        setReleases(newReleases);
 
         const newReleasesJSX = newReleases.map((release: IRelease) => {
           return {
@@ -136,7 +133,6 @@ const Releases = (): JSX.Element => {
               </Button>
             </Box>
           </Container>
-          {releasesE}
           {releasesJSX.length > 0 && releasesJSX.map(releaseJSX => releaseJSX.element)}
         </Box>
       </Grid>
