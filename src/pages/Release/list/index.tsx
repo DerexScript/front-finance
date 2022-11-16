@@ -9,11 +9,18 @@ import { ICategory } from './ICategory';
 import { IRelease } from './IRelease';
 import Release from './release';
 
+type TRelease = {
+  id: number;
+  action: string;
+  resolved: boolean;
+  element: JSX.Element;
+};
+
 const Releases = (): JSX.Element => {
   const [category, setCategory] = useState<ICategory[]>([]);
   const [releases, setReleases] = useState<IRelease[]>([]);
   const [releasesE, setReleasesE] = useState<JSX.Element[]>([]);
-  const [releasesEE, setReleasesEE] = useState<JSX.Element[]>([]);
+  const [releasesJSX, setReleasesJSX] = useState<TRelease[]>([]);
   const auth = useAuth();
   const { releaseGroupID } = useParams();
 
@@ -22,8 +29,8 @@ const Releases = (): JSX.Element => {
     const getReleases = useAxios({ url: `release-group/${releaseGroupID}` });
     const categoryDefault = {
       id: 0,
-      name: 'Escolha uma empresa',
-      description: 'Escolha uma empresa',
+      name: 'Escolha uma categoria',
+      description: 'Escolha uma categoria',
     };
     (async (): Promise<void> => {
       const [
@@ -38,21 +45,43 @@ const Releases = (): JSX.Element => {
         }
       }
       if (releasesGroupsResponse) {
-        setReleases(releasesGroupsResponse.data.releases);
-        const tt = releasesGroupsResponse.data.releases
+        const newReleases = releasesGroupsResponse.data.releases
           .sort()
           .reverse()
           .map((release: IRelease) => {
-            return (
+            release.state = true;
+            return release;
+          });
+        setReleases(newReleases);
+
+        const newReleasesJSX = newReleases.map((release: IRelease) => {
+          return {
+            id: release.id,
+            action: 'update',
+            resolved: true,
+            element: (
               <Release
                 categories={[categoryDefault, ...(categoryResponse?.data as ICategory[])]}
                 release={release}
+                action={'update'}
                 key={release.id}
               />
-            );
-          });
+            ),
+          };
+        });
+        setReleasesJSX(newReleasesJSX);
 
-        setReleasesEE([...releasesEE, ...tt]);
+        // const tt = newReleases.map((release: IRelease) => (
+        //   <Release
+        //     categories={[categoryDefault, ...(categoryResponse?.data as ICategory[])]}
+        //     release={release}
+        //     action={'update'}
+        //     key={release.id}
+        //   />
+        // ));
+
+        // const newID = new Date().getTime() + Math.floor(Math.random() * (999999 - 111111)) + 111111;
+        // setReleasesJSX([{ id: newID, action: 'update', resolved: true, element: [...releasesJSX, ...tt] }]);
       } else {
         if (releasesGroupsError != null && releasesGroupsError?.data === 'Unauthorized.') {
           auth.logout();
@@ -60,6 +89,21 @@ const Releases = (): JSX.Element => {
       }
     })();
   }, []);
+
+  const handleAddRelease = (): void => {
+    if (category.length) {
+      const keyID = new Date().getTime();
+      setReleasesJSX([
+        {
+          id: keyID,
+          action: 'insert',
+          resolved: true,
+          element: <Release categories={category} action={'insert'} key={keyID} />,
+        },
+        ...releasesJSX,
+      ]);
+    }
+  };
 
   return (
     <>
@@ -86,19 +130,14 @@ const Releases = (): JSX.Element => {
                 sx={{ marginBottom: 1 }}
                 fullWidth
                 startIcon={<Add />}
-                onClick={(): void => {
-                  if (category.length) {
-                    const asd = [<Release categories={category} key={new Date().getTime()} />, ...releasesE];
-                    setReleasesE(asd);
-                  }
-                }}
+                onClick={handleAddRelease}
               >
                 Adicionar
               </Button>
             </Box>
           </Container>
           {releasesE}
-          {releasesEE}
+          {releasesJSX.length > 0 && releasesJSX.map(releaseJSX => releaseJSX.element)}
         </Box>
       </Grid>
     </>

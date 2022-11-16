@@ -7,4 +7,5 @@ export interface IRelease {
   type: boolean;
   value: string;
   voucher: string;
+  state: boolean;
 }

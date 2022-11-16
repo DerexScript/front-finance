@@ -30,6 +30,7 @@ import { OverridableComponent } from '@mui/material/OverridableComponent';
 type TProps = {
   categories: ICategory[];
   release?: IRelease;
+  action: 'insert' | 'update';
 };
 
 const Release = ({ ...props }: TProps): JSX.Element | null => {
@@ -42,13 +43,8 @@ const Release = ({ ...props }: TProps): JSX.Element | null => {
   const [imageSrc, setImageSrc] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
   const [status, setStatus] = useState<number>(1);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [isUpdate, setIsUpdate] = useState<boolean>(props.release !== undefined);
-  // eslint-disable-next-line @typescript-eslint/ban-types, @typescript-eslint/no-unused-vars
-  const [ButtonIcon, setButtonIcon] = useState<OverridableComponent<SvgIconTypeMap<{}, 'svg'>> & { muiName: string }>(
-    Edit,
-  );
-
+  const [ButtonIcon, setButtonIcon] = useState<OverridableComponent<SvgIconTypeMap>>(Edit);
+  const [state, setState] = useState<boolean>(props.action === 'update');
   const { releaseGroupID } = useParams();
 
   useEffect((): void => {
@@ -88,6 +84,16 @@ const Release = ({ ...props }: TProps): JSX.Element | null => {
     } else {
       setImageSrc(``);
       setImageFile({} as FileList);
+    }
+  };
+
+  const handleEdit = (): void => {
+    if (state) {
+      setButtonIcon(Save);
+      setState(false);
+    } else {
+      setButtonIcon(Edit);
+      setState(true);
     }
   };
 
@@ -140,17 +146,17 @@ const Release = ({ ...props }: TProps): JSX.Element | null => {
         <Container maxWidth='xl'>
           <Box
             alignItems={{ md: 'center' }}
-            // , pointerEvents: 'none'
             sx={{ display: 'flex', marginBottom: 1, border: '0.4px solid #fff', padding: 1 }}
             flexDirection={{ xs: 'column', sm: 'column', md: 'row' }}
           >
             <Box width={{ md: 200, sm: '100%', xs: '100%' }} sx={{ marginTop: 1, marginRight: 1 }}>
               <Autocomplete
+                disabled={state}
                 id='autoComplete'
                 size='small'
                 fullWidth
                 value={category}
-                sx={{ width: '100%' }}
+                sx={{ width: '100%', filter: state ? 'blur(5px)' : '' }}
                 onChange={(_, value): void => {
                   setCategory(value as ICategory);
                 }}
@@ -177,6 +183,7 @@ const Release = ({ ...props }: TProps): JSX.Element | null => {
             </Box>
 
             <TextField
+              disabled={state}
               id='description'
               label='Descrição'
               value={description}
@@ -185,9 +192,10 @@ const Release = ({ ...props }: TProps): JSX.Element | null => {
               }}
               size='small'
               variant='standard'
-              sx={{ marginRight: 2 }}
+              sx={{ marginRight: 2, filter: state ? 'blur(5px)' : '' }}
             />
             <TextField
+              disabled={state}
               id='value'
               label='Valor'
               value={value}
@@ -200,11 +208,11 @@ const Release = ({ ...props }: TProps): JSX.Element | null => {
               size='small'
               type='number'
               variant='standard'
-              sx={{ marginRight: 2 }}
+              sx={{ marginRight: 2, filter: state ? 'blur(5px)' : '' }}
             />
 
             <RadioGroup
-              sx={{ margin: 0 }}
+              sx={{ margin: 0, filter: state ? 'blur(5px)' : '' }}
               row
               aria-labelledby='input-and-output-radio-buttons'
               name='radio-buttons-group'
@@ -219,13 +227,14 @@ const Release = ({ ...props }: TProps): JSX.Element | null => {
               //   return null;
               // })()
             >
-              <FormControlLabel value='output' control={<Radio />} label='Saida' />
-              <FormControlLabel value='input' control={<Radio />} label='Entrada' />
+              <FormControlLabel disabled={state} value='output' control={<Radio />} label='Saida' />
+              <FormControlLabel disabled={state} value='input' control={<Radio />} label='Entrada' />
             </RadioGroup>
 
-            <Box sx={{ marginTop: 1 }}>
+            <Box sx={{ marginTop: 1, filter: state ? 'blur(5px)' : '' }}>
               <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale='pt-br'>
                 <MobileDatePicker
+                  disabled={state}
                   showToolbar={true}
                   label='Data do lançamento'
                   inputFormat='DD/MM/YYYY HH:mm'
@@ -236,8 +245,9 @@ const Release = ({ ...props }: TProps): JSX.Element | null => {
               </LocalizationProvider>
             </Box>
 
-            <Box marginLeft={{ sm: 0, xs: 0, md: 2 }} sx={{ marginTop: 1 }}>
+            <Box marginLeft={{ sm: 0, xs: 0, md: 2 }} sx={{ marginTop: 1, filter: state ? 'blur(5px)' : '' }}>
               <Button
+                disabled={state}
                 sx={{ width: '100%', textAlign: 'center' }}
                 id='voucher'
                 startIcon={<CloudUploadIcon />}
@@ -246,7 +256,7 @@ const Release = ({ ...props }: TProps): JSX.Element | null => {
                 size='small'
                 color='secondary'
               >
-                Enviar Comprovante
+                {props.action === 'insert' ? <>Registrar Comprovante</> : <>Alterar Comprovante</>}
                 <input
                   type='file'
                   required={true}
@@ -265,22 +275,17 @@ const Release = ({ ...props }: TProps): JSX.Element | null => {
                 width: 150,
                 marginLeft: 1,
                 marginTop: 1,
+                filter: state ? 'blur(5px)' : '',
               }}
               alt=''
               src={imageSrc}
             />
+
             <Stack spacing={2} direction='row' sx={{ marginLeft: 1, justifyContent: 'center' }}>
-              {!isUpdate ? (
+              {props.action === 'insert' ? (
                 <Button variant='text' startIcon={<Add />} onClick={handleSubmit} />
               ) : (
-                <Button
-                  variant='text'
-                  startIcon={<ButtonIcon />}
-                  onClick={(): void => {
-                    setButtonIcon(Save);
-                    console.log(isUpdate);
-                  }}
-                />
+                <Button variant='text' startIcon={<ButtonIcon />} onClick={handleEdit} />
               )}
               {/* <Button variant='text' startIcon={<Delete />} onClick={(): void => setStatus(false)} /> */}
               <DialogMui
@@ -288,7 +293,7 @@ const Release = ({ ...props }: TProps): JSX.Element | null => {
                 title='Deseja Excluir?'
                 setResultDialog={setStatus}
                 entityID={0}
-                contentText={`Tem certeza que deseja excluir o lançamento ?`}
+                contentText={`Tem certeza que deseja excluir o lançamento, ${props.release?.description}?`}
                 option1='Cancelar'
                 option2='Excluir'
                 variant='text'
