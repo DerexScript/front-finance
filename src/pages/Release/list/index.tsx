@@ -4,6 +4,7 @@ import SiteMenu from 'components/siteMenu';
 import { useAuth } from 'context/AuthProvider/useAuth';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { useAxios } from 'utils/useAxios';
 import { ICategory } from './ICategory';
 import { IRelease } from './IRelease';
@@ -13,6 +14,7 @@ type TRelease = {
   id: number;
   action: string;
   resolved: boolean;
+  removed: boolean;
   element: JSX.Element;
 };
 
@@ -56,29 +58,20 @@ const Releases = (): JSX.Element => {
             id: release.id,
             action: 'update',
             resolved: true,
+            removed: false,
             element: (
               <Release
+                setReleasesJSX={setReleasesJSX}
                 categories={[categoryDefault, ...(categoryResponse?.data as ICategory[])]}
                 release={release}
                 action={'update'}
                 key={release.id}
+                myKey={release.id}
               />
             ),
           };
         });
         setReleasesJSX(newReleasesJSX);
-
-        // const tt = newReleases.map((release: IRelease) => (
-        //   <Release
-        //     categories={[categoryDefault, ...(categoryResponse?.data as ICategory[])]}
-        //     release={release}
-        //     action={'update'}
-        //     key={release.id}
-        //   />
-        // ));
-
-        // const newID = new Date().getTime() + Math.floor(Math.random() * (999999 - 111111)) + 111111;
-        // setReleasesJSX([{ id: newID, action: 'update', resolved: true, element: [...releasesJSX, ...tt] }]);
       } else {
         if (releasesGroupsError != null && releasesGroupsError?.data === 'Unauthorized.') {
           auth.logout();
@@ -88,17 +81,30 @@ const Releases = (): JSX.Element => {
   }, []);
 
   const handleAddRelease = (): void => {
-    if (category.length) {
+    const isState = releasesJSX.filter(releaseJSX => releaseJSX.resolved === false);
+
+    if (category.length && !isState.length) {
       const keyID = new Date().getTime();
       setReleasesJSX([
         {
           id: keyID,
           action: 'insert',
-          resolved: true,
-          element: <Release categories={category} action={'insert'} key={keyID} />,
+          resolved: false,
+          removed: false,
+          element: (
+            <Release
+              setReleasesJSX={setReleasesJSX}
+              categories={category}
+              action={'insert'}
+              key={keyID}
+              myKey={keyID}
+            />
+          ),
         },
         ...releasesJSX,
       ]);
+    } else {
+      toast.warning('Você precisa resolver as edições em andamento.');
     }
   };
 
@@ -133,7 +139,12 @@ const Releases = (): JSX.Element => {
               </Button>
             </Box>
           </Container>
-          {releasesJSX.length > 0 && releasesJSX.map(releaseJSX => releaseJSX.element)}
+          {releasesJSX.length > 0 &&
+            releasesJSX.map(releaseJSX => {
+              if (!releaseJSX.removed) {
+                return releaseJSX.element;
+              }
+            })}
         </Box>
       </Grid>
     </>

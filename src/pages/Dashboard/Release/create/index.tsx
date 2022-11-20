@@ -83,14 +83,17 @@ const ReleaseCreate = (): JSX.Element => {
   }
 
   const handleReleaseRegister = async (): Promise<void> => {
-    if (description.length && value.length && releaseFile.length && category.length && releaseGroup.length) {
+    if (description.length && value.length && category.length && releaseGroup.length) {
       const formData = new FormData();
       formData.append('description', description);
       formData.append('value', value);
-      formData.append('voucher', releaseFile[0], releaseFile[0].name);
-      formData.append('status', status.toString());
+      formData.append('type', status.toString());
       formData.append('category_id', category);
+      formData.append('insert_date', new Date().toISOString().slice(0, 19));
       formData.append('release_group_id', releaseGroup);
+      if (releaseFile.length && /image/.test(releaseFile[0].type)) {
+        formData.append('voucher', releaseFile[0], releaseFile[0].name);
+      }
       const { response } = await useAxios({
         url: 'release',
         method: 'POST',

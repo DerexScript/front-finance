@@ -27,10 +27,20 @@ import { useAxios } from 'utils/useAxios';
 import { useParams } from 'react-router-dom';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
 
+type TRelease = {
+  id: number;
+  action: string;
+  resolved: boolean;
+  removed: boolean;
+  element: JSX.Element;
+};
+
 type TProps = {
+  myKey: number;
   categories: ICategory[];
   release?: IRelease;
   action: 'insert' | 'update';
+  setReleasesJSX: React.Dispatch<React.SetStateAction<TRelease[]>>;
 };
 
 const Release = ({ ...props }: TProps): JSX.Element | null => {
@@ -44,7 +54,7 @@ const Release = ({ ...props }: TProps): JSX.Element | null => {
   const [loading, setLoading] = useState<boolean>(true);
   const [status, setStatus] = useState<number>(1);
   const [ButtonIcon, setButtonIcon] = useState<OverridableComponent<SvgIconTypeMap>>(Edit);
-  const [state, setState] = useState<boolean>(props.action === 'update');
+  const [isActive, setIsActive] = useState<boolean>(status ? props.action === 'update' : false);
   const { releaseGroupID } = useParams();
 
   useEffect((): void => {
@@ -88,9 +98,18 @@ const Release = ({ ...props }: TProps): JSX.Element | null => {
   };
 
   const handleEdit = async (): Promise<void> => {
-    if (state) {
+    if (isActive) {
       setButtonIcon(Save);
-      setState(false);
+      setIsActive(false);
+      //muda estado atual deste component renderizado para false;
+      props.setReleasesJSX(elsJsx => {
+        return elsJsx.map(elJsx => {
+          if (elJsx.id === props.release?.id) {
+            elJsx.resolved = false;
+          }
+          return elJsx;
+        });
+      });
     } else {
       if (
         category.id &&
@@ -114,9 +133,18 @@ const Release = ({ ...props }: TProps): JSX.Element | null => {
         formData.append('_method', 'PUT');
         const { response } = await useAxios({ url: `release/${props.release?.id}`, method: 'post', data: formData });
         if (response) {
+          //muda estado atual deste component renderizado para true;
+          props.setReleasesJSX(elsJsx => {
+            return elsJsx.map(elJsx => {
+              if (elJsx.id === props.release?.id) {
+                elJsx.resolved = true;
+              }
+              return elJsx;
+            });
+          });
           toast.success('Lançamento editado com sucesso!');
           setButtonIcon(Edit);
-          setState(true);
+          setIsActive(true);
         }
       } else {
         if (!category.id) {
@@ -146,9 +174,9 @@ const Release = ({ ...props }: TProps): JSX.Element | null => {
       category.id !== 0 &&
       description.length &&
       value &&
-      releaseType.length &&
-      imageFile.length &&
-      /image/.test(imageFile[0].type)
+      releaseType.length
+      //imageFile.length &&
+      ///image/.test(imageFile[0].type)
     ) {
       const formData = new FormData();
       formData.append('category_id', category.id.toString());
@@ -157,9 +185,21 @@ const Release = ({ ...props }: TProps): JSX.Element | null => {
       formData.append('type', (releaseType === 'input').toString());
       formData.append('insert_date', releaseDate?.format('YYYY/MM/DD HH:mm:ss') as string);
       formData.append('release_group_id', releaseGroupID as string);
-      formData.append('voucher', imageFile[0], imageFile[0].name);
+      if (imageFile.length && /image/.test(imageFile[0].type)) {
+        formData.append('voucher', imageFile[0], imageFile[0].name);
+      }
       const { response } = await useAxios({ url: `release`, method: 'POST', data: formData });
       if (response) {
+        //mudando status resolved para true
+        props.setReleasesJSX(elsJSX => {
+          return elsJSX.map(elJSX => {
+            if (elJSX.id === props.myKey) {
+              elJSX.resolved = true;
+            }
+            return elJSX;
+          });
+        });
+
         toast.success('Lançamento adicionado com sucesso!');
       }
     } else {
@@ -183,23 +223,35 @@ const Release = ({ ...props }: TProps): JSX.Element | null => {
     }
   };
 
-  return status === 1 ? (
+  useEffect(() => {
+    if (!status) {
+      //removendo esse elemento da lista
+      props.setReleasesJSX(elsJSX => elsJSX.filter(elJSX => elJSX.id !== props.myKey));
+    }
+  }, [status]);
+
+  return (
     <>
-      {!loading && (
+      {!loading && status ? (
         <Container maxWidth='xl'>
           <Box
             alignItems={{ md: 'center' }}
-            sx={{ display: 'flex', marginBottom: 1, border: '0.4px solid #fff', padding: 1 }}
+            sx={{
+              display: !status ? 'none' : 'flex',
+              marginBottom: 1,
+              border: '0.4px solid #fff',
+              padding: 1,
+            }}
             flexDirection={{ xs: 'column', sm: 'column', md: 'row' }}
           >
             <Box width={{ md: 200, sm: '100%', xs: '100%' }} sx={{ marginTop: 1, marginRight: 1 }}>
               <Autocomplete
-                disabled={state}
+                disabled={isActive}
                 id='autoComplete'
                 size='small'
                 fullWidth
                 value={category}
-                sx={{ width: '100%', filter: state ? 'blur(5px)' : '' }}
+                sx={{ width: '100%', filter: isActive ? 'blur(5px)' : '' }}
                 onChange={(_, value): void => {
                   setCategory(value as ICategory);
                 }}
@@ -209,6 +261,7 @@ const Release = ({ ...props }: TProps): JSX.Element | null => {
                 loading={loading}
                 renderInput={(params): React.ReactNode => (
                   <TextField
+                    required={true}
                     {...params}
                     label='Categoria'
                     InputProps={{
@@ -226,7 +279,8 @@ const Release = ({ ...props }: TProps): JSX.Element | null => {
             </Box>
 
             <TextField
-              disabled={state}
+              disabled={isActive}
+              required={true}
               id='description'
               label='Descrição'
               value={description}
@@ -235,10 +289,11 @@ const Release = ({ ...props }: TProps): JSX.Element | null => {
               }}
               size='small'
               variant='standard'
-              sx={{ marginRight: 2, filter: state ? 'blur(5px)' : '' }}
+              sx={{ marginRight: 2 }} // , filter: state ? 'blur(5px)' : ''
             />
             <TextField
-              disabled={state}
+              disabled={isActive}
+              required={true}
               id='value'
               label='Valor'
               value={value}
@@ -251,11 +306,11 @@ const Release = ({ ...props }: TProps): JSX.Element | null => {
               size='small'
               type='number'
               variant='standard'
-              sx={{ marginRight: 2, filter: state ? 'blur(5px)' : '' }}
+              sx={{ marginRight: 2, filter: isActive ? 'blur(5px)' : '' }}
             />
 
             <RadioGroup
-              sx={{ margin: 0, filter: state ? 'blur(5px)' : '' }}
+              sx={{ margin: 0, filter: isActive ? 'blur(5px)' : '' }}
               row
               aria-labelledby='input-and-output-radio-buttons'
               name='radio-buttons-group'
@@ -263,34 +318,34 @@ const Release = ({ ...props }: TProps): JSX.Element | null => {
                 setReleaseType((evt.target as HTMLInputElement).value);
               }}
               value={releaseType}
-              // ((): string | null => {
-              //   if (props.release !== undefined) {
-              //     return props.release?.type ? 'input' : 'output';
-              //   }
-              //   return null;
-              // })()
             >
-              <FormControlLabel disabled={state} value='output' control={<Radio />} label='Saida' />
-              <FormControlLabel disabled={state} value='input' control={<Radio />} label='Entrada' />
+              <FormControlLabel
+                disabled={isActive}
+                value='output'
+                control={<Radio color='secondary' />}
+                label='Saida'
+              />
+              <FormControlLabel disabled={isActive} value='input' control={<Radio color='success' />} label='Entrada' />
             </RadioGroup>
 
-            <Box sx={{ marginTop: 1, filter: state ? 'blur(5px)' : '' }}>
+            <Box sx={{ marginTop: 1 }}>
+              {/* , filter: state ? 'blur(5px)' : '' */}
               <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale='pt-br'>
                 <MobileDatePicker
-                  disabled={state}
+                  disabled={isActive}
                   showToolbar={true}
                   label='Data do lançamento'
                   inputFormat='DD/MM/YYYY HH:mm'
                   value={releaseDate}
                   onChange={setReleaseDate}
-                  renderInput={(params: TextFieldProps): JSX.Element => <TextField {...params} />}
+                  renderInput={(params: TextFieldProps): JSX.Element => <TextField required={true} {...params} />}
                 />
               </LocalizationProvider>
             </Box>
 
-            <Box marginLeft={{ sm: 0, xs: 0, md: 2 }} sx={{ marginTop: 1, filter: state ? 'blur(5px)' : '' }}>
+            <Box marginLeft={{ sm: 0, xs: 0, md: 2 }} sx={{ marginTop: 1, filter: isActive ? 'blur(5px)' : '' }}>
               <Button
-                disabled={state}
+                disabled={isActive}
                 sx={{ width: '100%', textAlign: 'center' }}
                 id='voucher'
                 startIcon={<CloudUploadIcon />}
@@ -318,7 +373,7 @@ const Release = ({ ...props }: TProps): JSX.Element | null => {
                 width: 150,
                 marginLeft: 1,
                 marginTop: 1,
-                filter: state ? 'blur(5px)' : '',
+                filter: isActive ? 'blur(5px)' : '',
               }}
               alt=''
               src={imageSrc}
@@ -348,9 +403,9 @@ const Release = ({ ...props }: TProps): JSX.Element | null => {
             </Stack>
           </Box>
         </Container>
-      )}
+      ) : null}
     </>
-  ) : null;
+  );
 };
 
 export default Release;
